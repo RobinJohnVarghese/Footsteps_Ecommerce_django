@@ -1,0 +1,8 @@
+<div class="item-option-select">
+    <select id="size_id" name="size_id" class="form-control" onchange='loadAvailability()'>
+    <option value="" disabled selected>Select</option>
+    {% for i in sizelist %}
+    <option value="{{ i.id  }}">"{{ i.size | capfirst }}" inch</option>
+    {% endfor %}
+    </select>
+</div>

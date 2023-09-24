@@ -1,0 +1,109 @@
+
+
+
+{% extends 'ecommerce/base.html' %}
+ {% load static %}
+ {% block content %}
+
+<section class="section-conten padding-y bg" style = "padding-top: 40px; padding-bottom: 20px;">
+
+
+<div class="container">
+	<div class="row">
+	{% include 'includes\dashboard_sidebar.html'%}
+	<main class="col-md-9">
+		<article class="card">
+		<header class="card-header">
+			<strong class="d-inline-block mr-3">Your Order History </strong>
+		</header>
+		<div class="card-body">
+			<div class="row">
+				<div class = 'col-md-12'>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Order No</th>
+                <th scope="col">Billing Address</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Order Total</th>
+                <th scope="col">Date</th>
+                <th scope="col">Status</th>
+                <th scope="col">Invoice</th>
+                {% comment %} <th scope="col">Details</th> {% endcomment %}
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                      <th scope="row">{{order.order_number}}</th>
+                      <td>{{order.full_name}} <p>{{order.full_address_d}}</p></td>
+                      <td>{{order.phone}}</td>
+                      <td>{{order.order_total}}</td>
+                      <td>{{order.created_at}}</td>
+                      <td>{{order.status}}</td>
+                      <td><a href="{% url 'invoice_details' order.id%}"  class="btn btn-warning"> Invoice</a></td>
+                      {% comment %} <td><a href="{% url 'details' order.id%}"  class="btn btn-info"> Details</a></td> {% endcomment %}
+                      <td>
+                        <a href="{% url 'details' order.id%}"  class="btn btn-info"> Details</a>
+                        {%if order.status == 'Completed'%}
+                        {%else%}
+                        <a href="{% url 'cancel_order' order.id%}"  class="btn btn-danger"> Cancel</a></td>
+                        {%endif%}
+                      </tr>
+                {% endfor %}
+            </tbody> 
+          </table>
+				</div>
+        <div class="col-lg-12 text-center" style = 'font-size: 25px; font-weight: 900;'>
+          <ul class="pagination justify-content-center">
+              {% if orders.has_previous %}
+                  <li class="page-item">
+                      <a class="page-link" href="?page=1">First</a>
+                  </li>
+                  <li class="page-item">
+                      <a class="page-link" href="?page={{ orders.previous_page_number }}">Previous</a>
+                  </li>
+              {% endif %}
+      
+              {% for page_num in orders.paginator.page_range %}
+                  {% if orders.number == page_num %}
+                      <li class="page-item active" aria-current="page">
+                          <span class="page-link">{{ page_num }} <span class="sr-only">(current)</span></span>
+                      </li>
+                  {% else %}
+                      <li class="page-item">
+                          <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                      </li>
+                  {% endif %}
+              {% endfor %}
+      
+              {% if orders.has_next %}
+                  <li class="page-item">
+                      <a class="page-link" href="?page={{ orders.next_page_number }}">Next</a>
+                  </li>
+                  <li class="page-item">
+                      <a class="page-link" href="?page={{ orders.paginator.num_pages }}">Last</a>
+                  </li>
+              {% endif %}
+          </ul>
+      </div> 
+
+
+
+				
+
+
+			</div> <!-- row.// -->
+		</div> <!-- card-body .// -->
+		
+		</article> <!-- order-group.// -->
+	</main>
+</div> <!-- row.// -->
+</div>
+
+
+</section>
+
+
+{% endblock content %}

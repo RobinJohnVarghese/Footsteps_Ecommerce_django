@@ -1,0 +1,52 @@
+{% extends 'ecommerce/base.html' %}
+ {% load static %}
+ {% block content %}
+
+<section class="section-conten padding-y bg" style = "padding-top: 40px; padding-bottom: 20px;">
+
+
+<div class="container">
+	<div class="row">
+	{% include 'includes\dashboard_sidebar.html'%}
+	<main class="col-md-9">
+		<article class="card">
+		<header class="card-header">
+			<strong class="d-inline-block mr-3">Logged in as : </strong>
+			<span>{{user1.firstname}} {{ user1.lastname}}</span>
+		</header>
+		<div class="card-body">
+			<div class="row">
+
+				<div class = 'col-md-6'>
+				    <div class = 'card' style ='text-align:center; height: 200px;'>
+						<div class = 'card-body'>
+							<h5 class = 'card-title'>Wallet  Amounts</h5>
+                            {% if wallet.amount %}
+							<h4>$ {{wallet.amount}}</h4>
+                            {% else %}
+                            <h4>$ 0</h4>
+                            {% endif %}
+						</div>
+					</div>
+				</div>
+
+                <div class = 'col-md-6'>
+				    <div class = 'card' style ='text-align:center; height: 200px;'>
+						<div class = 'card-body'>
+							<h5 class = 'card-title'>Referral ID</h5>
+							<h4>{{user1.referral_id}}</h4>
+                        </div>
+					</div>
+				</div>
+			</div> <!-- row.// -->
+		</div> <!-- card-body .// -->
+		
+		</article> <!-- order-group.// -->
+	</main>
+</div> <!-- row.// -->
+</div>
+
+
+</section>
+
+{% endblock content %}

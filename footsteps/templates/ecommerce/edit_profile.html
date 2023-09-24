@@ -1,0 +1,129 @@
+
+
+
+{% extends 'ecommerce/base.html' %}
+ {% load static %}
+ {% block content %}
+
+<section class="section-conten padding-y bg" style = "padding-top: 40px; padding-bottom: 20px;">
+
+
+<div class="container">
+	<div class="row">
+	{% include 'includes\dashboard_sidebar.html'%}
+	<main class="col-md-9">
+		  <article class="card">
+		    <header class="card-header">
+			    <strong class="d-inline-block mr-3">Edit Your Profile </strong>
+		    </header>
+		<div class="card-body">
+			<div class="row">
+				<div class = 'col-md-12'>
+						<form action="{% url 'edit_profile'%}" method = 'POST' >
+							{% csrf_token %}
+							
+								<div class="form-row">
+									<div class="form-group col-md-6">
+										<label>First Name</label>
+										<input type="text" name="firstname" class="form-control" value="{{user1.firstname}}" required>
+									</div>
+									<div class="form-group col-md-6">
+										<label>Last Name</label>
+										<input type="text" name="lastname" class="form-control" value="{{user1.lastname}}" required>
+									</div>
+							    </div>
+								<br>
+								<div class="form-row">
+									<div class="form-group col-md-6">
+										<label>Phone</label>
+										<input type="text" name="mobile" class="form-control" value="{{user1.mobile}}" required>
+									</div>
+									<div class="form-group col-md-6">
+										<label>Email</label>
+										<input type="email" name="email" class="form-control" value="{{user1.email}}" required>
+									</div>
+							    </div>
+								<br>
+								{% comment %} <div class="form-row">
+									<div class="col-sm-12">
+									<label>Address line - 1</label>
+									<input type="text" name="address_line_1" class="form-control" value="{{userdetail.address_line_1}}" required>
+									
+									</div>
+								</div>
+								<br>
+								<div class="form-row">
+									<div class="col-sm-12">
+									<label>Address line - 2</label>
+									<input type="text" name="address_line_2" class="form-control" value="{{userdetail.address_line_2}}" required>
+									
+									</div>
+								</div>
+								<br>
+								<div class="form-row">
+									<div class="form-group col-md-4">
+										<label>City</label>
+										<input type="text" name="city" class="form-control" value="{{userdetail.city}}" required>
+										
+									</div>
+									<div class="form-group col-md-4">
+										<label>State</label>
+										<input type="text" name="state" class="form-control" value="{{userdetail.state}}" required>
+										
+									</div>
+									<div class="form-group col-md-4">
+										<label>Country</label>
+										<input type="text" name="country" class="form-control" value="{{userdetail.country}}" required>
+										
+									</div>
+							    </div>
+								<br> {% endcomment %}
+								{% comment %} <div class="form-row">
+									<div class="col-sm-3">
+									<h6 class="mb-0">city</h6>
+									</div>
+									<div class="col-sm-9">
+									<h6 class="text-muted mb-0">{{userdetail.city}}</h6>
+									</div>
+								</div>
+								<hr>
+								<div class="row">
+									<div class="col-sm-3">
+									<h6 class="mb-0">state</h6>
+									</div>
+									<div class="col-sm-9">
+									<h6 class="text-muted mb-0">{{userdetail.state}}</h6>
+									</div>
+								</div>
+								<hr>
+								<div class="row">
+									<div class="col-sm-3">
+									<h6 class="mb-0">country</h6>
+									</div>
+									<div class="col-sm-9">
+									<h6 class="text-muted mb-0">{{userdetail.country}}</h6>
+									</div>
+								</div>
+								<hr> {% endcomment %}
+								<div>
+									<input type="submit" value="Save" class= "btn btn-primary">
+									<button type="reset" class="btn btn-warning">Reset</button>
+								</div>
+								
+						</form>
+					
+						
+          
+			  </div>
+			</div> <!-- row.// -->
+		</div> <!-- card-body .// -->
+		
+		  </article> <!-- order-group.// -->
+	</main>
+  </div> <!-- row.// -->
+</div>
+
+
+</section>
+
+{% endblock content %}

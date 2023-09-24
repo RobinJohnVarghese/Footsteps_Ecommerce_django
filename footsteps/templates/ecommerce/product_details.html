@@ -1,0 +1,324 @@
+{% extends 'ecommerce/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__links">
+                    <a href="{% url "home"%}"><i class="fa fa-home"></i> Home</a>
+                    
+                    <span>Essential structured blazer</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+<!-- Product Details Section Begin -->
+<section class="product-details spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="product__details__pic">
+                    <div class="product__details__pic__left product__thumb nice-scroll">
+                        <a class="pt active" href="{{ product.images.url }}">
+                            <img src="{{ product.images.url }}" alt="">
+                        </a>
+                        <a class="pt" href="{{ product.images.url }}">
+                            <img src="{{ product.images.url }}" alt="">
+                        </a>
+                        <a class="pt" href="{{ product.images.url }}">
+                            <img src="{{ product.images.url }}" alt="">
+                        </a>
+                        <a class="pt" href="{{ product.images.url }}">
+                            <img src="{{ product.images.url }}" alt="">
+                        </a>
+                    </div>
+                    <div class="product__details__slider__content">
+                        <div class="product__details__pic__slider owl-carousel">
+                            <img data-hash="product-1" class="product__big__img" src="{{ product.images.url }}" alt="">
+                            <img data-hash="product-2" class="product__big__img" src="{{ product.images.url }}" alt="">
+                            <img data-hash="product-3" class="product__big__img" src="{{ product.images.url }}" alt="">
+                            <img data-hash="product-4" class="product__big__img" src="{{ product.images.url }}" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="product__details__text">
+                    <h3>{{ product.product_name }} <span>Brand: SKMEIMore Men Watches from SKMEI</span></h3>
+                    {% comment %} <div class="rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <span>( 138 reviews )</span>
+                    </div> {% endcomment %}
+                    {% if product.price != product.real_price %}
+                    <div class="product__details__price">$ {{ product.price }} <span>$ {{product.real_price }}</span></div>
+                    {% else %}
+                    <div class="product__details__price">$ {{ product.price }} </span></div>
+                    {% endif %}
+                    {% comment %} <div class="product__details__price">$ {{ product.price }} <span>$ {{product.real_price }}</span></div> {% endcomment %}
+                    <p>Nemo enim ipsam voluptatem quia aspernatur aut odit aut loret fugit, sed quia consequuntur
+                    magni lores eos qui ratione voluptatem sequi nesciunt.</p>
+
+
+                    <form action="{%url 'add_cart' product.id%}" method="post">
+                        {% csrf_token %} 
+
+
+                        <div class="product__details__button">
+                            {% comment %} <div class="quantity">
+                                <span>Quantity:</span>
+                                <div class="pro-qty">
+                                    <input type="text" value="1">
+                                </div>
+                            </div> {% endcomment %}
+                            <button type="submit" class="cart-btn"><span class="icon_bag_alt"></span> Add to cart</button>
+                            <ul>
+                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                <li><a href="#"><span class="icon_adjust-horiz"></span></a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="product__details__widget">
+                            
+                            <ul>
+                                {% comment %} <li>
+                                    <span>Availability:</span>
+                                    <div class="stock__checkbox">
+                                        <label for="stockin">
+                                            In Stock
+                                            <input type="checkbox" id="stockin">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                </li> {% endcomment %}
+                                <li>
+                                    <span>Available color:</span>
+                                    {% comment %} <div class="color__checkbox">
+                                        <label for="red">
+                                            <input type="radio" name="color__radio" id="red" checked>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                        <label for="black">
+                                            <input type="radio" name="color__radio" id="black">
+                                            <span class="checkmark black-bg"></span>
+                                        </label>
+                                        <label for="grey">
+                                            <input type="radio" name="color__radio" id="grey">
+                                            <span class="checkmark grey-bg"></span>
+                                        </label>
+                                    </div> {% endcomment %}
+                                    <div class="item-option-select" >
+                                        <select name="color_id" id="color_id" class="form-control" onchange='loadSize()' required>
+                                        <option value="" disabled selected>Select</option>
+                                        {% for i in color %}
+                                        <option value="{{ i.id}}">{{ i.color | capfirst }}</option>
+                                        {% endfor %}
+                                        </select>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span>Available size:</span>
+                                    {% comment %} <div class="size__btn">
+                                        <label for="xs-btn" class="active">
+                                            <input type="radio" id="xs-btn">
+                                            xs
+                                        </label>
+                                        <label for="s-btn">
+                                            <input type="radio" id="s-btn">
+                                            s
+                                        </label>
+                                        <label for="m-btn">
+                                            <input type="radio" id="m-btn">
+                                            m
+                                        </label>
+                                        <label for="l-btn">
+                                            <input type="radio" id="l-btn">
+                                            l
+                                        </label>
+                                    </div> {% endcomment %}
+                                    <div class="item-option-select" id ='div2'>
+                                        <select name="size_id" class="form-control" onchange='loadAvailability()'>
+                                        <option value="" disabled selected>Select color First</option>
+                                        {% comment %} {% for i in size %}
+                                        <option value="{{ i.size | lower }}">"{{ i.size | capfirst }}" inch</option>
+                                        {% endfor %} {% endcomment %}
+                                        </select>
+                                    </div>
+                                    <div id="avalibality"></div>
+                                </li>
+                                <li>
+                                    <span>Promotions:</span>
+                                    <p>Free shipping</p>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                    </form>
+
+
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="product__details__tab">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Description</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Specification</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">Reviews ( 2 )</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                            <h6>Description</h6>
+                            <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed
+                                quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt loret.
+                                Neque porro lorem quisquam est, qui dolorem ipsum quia dolor si. Nemo enim ipsam
+                                voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed quia ipsu
+                                consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Nulla
+                            consequat massa quis enim.</p>
+                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+                                dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
+                                nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium
+                            quis, sem.</p>
+                        </div>
+                        <div class="tab-pane" id="tabs-2" role="tabpanel">
+                            <h6>Specification</h6>
+                            <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed
+                                quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt loret.
+                                Neque porro lorem quisquam est, qui dolorem ipsum quia dolor si. Nemo enim ipsam
+                                voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed quia ipsu
+                                consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Nulla
+                            consequat massa quis enim.</p>
+                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+                                dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
+                                nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium
+                            quis, sem.</p>
+                        </div>
+                        <div class="tab-pane" id="tabs-3" role="tabpanel">
+                            <h6>Reviews ( 2 )</h6>
+                            <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed
+                                quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt loret.
+                                Neque porro lorem quisquam est, qui dolorem ipsum quia dolor si. Nemo enim ipsam
+                                voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed quia ipsu
+                                consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Nulla
+                            consequat massa quis enim.</p>
+                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+                                dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
+                                nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium
+                            quis, sem.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="related__title">
+                    <h5>RELATED PRODUCTS</h5>
+                </div>
+            </div>
+            {% for product in products %}
+            <div class="col-lg-3 col-md-4 col-sm-6 ">
+                <div class="product__item">
+                    <div class="product__item__pic set-bg">
+                        <a href="{%url 'product_details' product_id=product.id%}" class="product__item__pic set-bg">
+                            <img src="{{ product.images.url }}" alt="Image Description">
+                        </a>
+
+                        <ul class="product__hover">
+                            <li><a href="{{ product.images.url }}" class="image-popup"><span class="arrow_expand"></span></a></li>
+                            <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                            {% comment %} <li><a href="{% url 'add_cart' product.id %}"><span class="icon_bag_alt"></span></a></li> {% endcomment %}
+                        </ul>
+
+                    </div>
+                    <div class="product__item__text">
+                        <h6><a href="{%url 'product_details' product_id=product.id%}">{{ product.product_name }}</a></h6>
+                        {% comment %} <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                        </div> {% endcomment %}
+                        
+                        <div class="product__price">$  {{ product.price }}<span>$  {{ product.price | add:3}}</span></div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+    function loadSize() {
+        var sel = document.getElementById('color_id');
+        //alert(sel.value);
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                // The responseText contains the HTML content from the Django view
+                document.getElementById("div2").innerHTML = this.responseText;
+            }
+        };
+
+        xhttp.open("GET", "../loadsize?color_id="+sel.value, true);
+        xhttp.send();
+    }
+
+
+function loadPrice() {
+        var sel = document.getElementById('size_id');
+        //alert(sel.value);
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                // The responseText contains the HTML content from the Django view
+                document.getElementById("price").innerHTML = this.responseText;
+            }
+        };
+
+        xhttp.open("GET", "../../show_price?size_id="+sel.value, true);
+        xhttp.send();
+    }
+
+
+function loadAvailability() {
+        var sel = document.getElementById('size_id');
+        //alert(sel.value);
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                // The responseText contains the HTML content from the Django view
+                document.getElementById("avalibality").innerHTML = this.responseText;
+            }
+        };
+
+        xhttp.open("GET", "../show_avalibality?size_id="+sel.value, true);
+        xhttp.send();
+    }
+
+
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,330 @@
+{% extends 'ecommerce/base.html' %}
+ {% load static %}
+ {% block content %}
+
+
+    <!-- Breadcrumb Begin -->
+    <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__links">
+                        <a href="home"><i class="fa fa-home"></i> Home</a>
+                        <span>Shop</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+    <!-- Shop Section Begin -->
+    <section class="shop spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3">
+                    <div class="shop__sidebar">
+                        <div class="sidebar__categories">
+                            <div class="section-title">
+                                <h4>Categories</h4>
+                            </div>
+                            <div class="categories__accordion">
+                                <div class="accordion" id="accordionExample">
+                                    
+                                    <div class="card">
+                                        <div class="card-heading">
+                                            <a data-toggle="collapse" data-target="#collapseTwo">All category</a>
+                                        </div>
+                                        <div id="collapseTwo" class="collapse" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <ul>
+                                                    <li><a class="dropdown-item" href="{% url 'shop' %}">All Products </a></li>
+                                                    {% for category in links %}
+                                                    <li><a class="dropdown-item" href="{{ category.get_url }}">{{ category.category_name }} </a></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="sidebar__filter">
+                            <form method="GET" action="{%url 'filtered_price'%}" id="filter-form">
+                                {% csrf_token %}
+                                <div class="section-title">
+                                    <h4>Shop by price</h4>
+                                </div>
+                                <div class="filter-range-wrap">
+                                    <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
+                                    data-min="10" data-max="99"></div>
+                                    <div class="range-slider">
+                                        <div class="price-input">
+                                            <p>Price:</p>
+                                            <br >
+                                            <label for="minamount">min amount:</label>
+                                            <input type="text" name="minamount" id="minamount" class="form-control" value="{{min_amount}}" required readonly>
+                                            <label for="maxamount">max amount:</label>
+                                            <input type="text" name="maxamount" id="maxamount" class="form-control"  value="{{max_amount}}"  required readonly>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+                                <button type="submit"  class="site-btn">Filter</button>
+                            </form>
+                        </div>
+                        {% comment %} <div>
+                            <h6 class="card-header">Price</h6>
+                            <div class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <input class="range-slid er"  type="range" value="{{minMaxPrice.price__min}}" max={{minMaxPrice.price__max}} min={{minMaxPrice.price__min}} id="rangeInput" oninput="maxPrice.value=this.value" />
+                                    <p>{{minMaxPrice.price__min}}-{{minMaxPrice.price__max}}</p>
+                                </li>
+                                <li class="list-group-item">
+                                    Max: <input type="number" value="{{minMaxPrice.price__min}}" max={{minMaxPrice.price__max}} min={{minMaxPrice.price__min}} class="form-control" id="maxPrice" onkeyup="rangeInput.value=this.value" id="maxPrice" />
+                                    <button id="priceFilterBtn" class="btn btn-info btn-sm mt-1">Filter</button>
+                                </li>
+                            </div>
+                        </div> {% endcomment %}
+                    </div>
+                </div>
+
+                <div class="col-lg-9 col-md-9">
+                    <div class="row">
+                        {% for product in products %}
+                
+                        <div class="col-lg-4 col-md-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg">
+                                    <a href="{%url 'product_details' product_id=product.id%}" class="product__item__pic set-bg">
+                                        <img src="{{ product.images.url }}" alt="Image Description">
+                                    </a>
+
+                                    <ul class="product__hover">
+                                        <li><a href="{{ product.images.url }}" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                        <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                    </ul>
+                                </div>                               
+                                <div class="product__item__text">
+                                    <h6><a href="{%url 'product_details' product_id=product.id%}">{{ product.product_name }}</a></h6>
+                                    {% if product.price != product.real_price %}
+                                    <div class="product__details__price">$ {{ product.price }} <span>$ {{product.real_price }}</span></div>
+                                    {% else %}
+                                    <div class="product__details__price">$ {{ product.price }} </span></div>
+                                    {% endif %}
+                                    {% comment %} <div class="product__price">$ {{ product.price }}<span>$ {{ product.real_price}} </span></div>    {% endcomment %}
+                                </div>
+                                {% comment %} {{ product.price | add:3}} {% endcomment %}
+                            </div>
+                        </div>
+
+                        {% endfor %}
+                        
+                        <div class="col-lg-12 text-center">
+                        {% if products.has_other_pages %}
+                            <div class="pagination__option">
+                                {% if products.has_previous %}
+                                <a href="?page={{products.previous_page_number}}"><i class="fa fa-angle-left"></i></a>
+                                {% else %}
+                                <a href="#"><i class="fa fa-angle-left"></i></a>
+                                {% endif %}
+
+                                {% for i in products.paginator.page_range %}
+				                    {% if products.number == i %}
+                                        <a href="#">{{i}}</a>
+                                    {% else %}
+                                        <a href="?page={{i}}">{{i}}</a>
+                                    {% endif %} 
+                                {% endfor %}  
+                                
+                                {% if products.has_next %}
+                                <a href="?page={{products.next_page_number}}"><i class="fa fa-angle-right"></i></a>
+                                {% else %}
+                                <a href="#"><i class="fa fa-angle-right"></i></a>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shop Section End -->
+
+    {% comment %} <script>
+        $(document).ready(function () {
+            $('#filter-form').submit(function (event) {
+                event.preventDefault(); // Prevent the default form submission
+        
+                const form = $(this);
+                const url = form.attr('action');
+                const formData = form.serialize();
+        
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: formData,
+                    dataType: 'html', // Expect HTML response
+                    success: function (data) {
+                        $('#filtered-results').html(data); // Update the results container
+                    },
+                    error: function (error) {
+                        console.log('Error:', error);
+                    },
+                });
+            });
+        });
+        </script> {% endcomment %}
+
+{% comment %} <script>
+            $(document).ready(function () {
+                $(document).on('click', '.minamount, .maxamount', function (event) {
+                    event.preventDefault();
+                    const url = $(this).attr('href');
+                    //const itemId1 = $(this).parent().find('input').attr('id');
+                    //console.log("itemId = "+itemId1)
+                    const itemId = $(this).parent().find('input').attr('id').split('-')[1];
+                    
+            
+                    updateQuantity(url, itemId);
+                });
+            
+                function updateQuantity(url, itemId) {
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.error) {
+                                alert(data.error);
+                            } 
+                            //else if (data.removed) {
+                            //    alert('Product Removed From Cart');
+                            //    location.reload();
+                            //}
+                            else {
+                                // Update the input field with the corresponding item ID
+                                //const quantityInput = $('#item-' + itemId + '-quantity');
+                                //quantityInput.val(data.quantity);
+            
+                                // Update the total price
+                                const price = parseFloat(data.price);
+                                const quantity = parseInt(data.quantity);
+                                const quantity = parseInt(data.quantity);
+                                const total = price * quantity;
+                                const totalPriceElement = quantityInput.closest('tr').find('.cart__total');
+                                totalPriceElement.text('$' + total.toFixed(2));
+            
+                                // Update cart total, tax, and grand total
+                                //const cartTotalElement = $('#cart-total');
+                                //const taxElement = $('#tax');
+                                //const grandTotalElement = $('#grand-total');
+            
+                                cartTotalElement.text('$' + data.total.toFixed(2));
+                                taxElement.text('$' + data.tax.toFixed(2));
+                                grandTotalElement.text('$' + data.grand_total.toFixed(2));
+                            }
+                        },
+                        error: function (error) {
+                            console.log('Error:', error);
+                        },
+                    });
+                }
+            });
+            </script>  {% endcomment %}
+
+<!-- Load jQuery first -->
+{% comment %} <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<!-- Then load jQuery UI -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> {% endcomment %}
+{% comment %} <script>
+$(document).ready(function () {
+    const priceRange = $('.price-range');
+    
+    if (priceRange.length > 0) {
+        // Initialize the price range slider only if the element exists
+        priceRange.slider({
+            range: true,
+            min: 10,
+            max: 99,
+            values: [minAmountInput.val(), maxAmountInput.val()],
+            slide: function (event, ui) {
+                minAmountInput.val('$' + ui.values[0]);
+                maxAmountInput.val('$' + ui.values[1]);
+            }
+        });
+    }
+
+    // Rest of your code
+});
+
+</script> {% endcomment %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const minAmountInput = document.getElementById('minamount');
+    const maxAmountInput = document.getElementById('maxamount');
+    const priceRange = document.querySelector('.price-range');
+    const filterButton = document.getElementById('filter-button');
+    let minAmountValue = parseFloat(minAmountInput.value);
+    let maxAmountValue = parseFloat(maxAmountInput.value);
+
+    // Store the initial values
+    const initialMinAmount = minAmountValue;
+    const initialMaxAmount = maxAmountValue;
+
+    // Initialize the price range slider
+    noUiSlider.create(priceRange, {
+        start: [minAmountValue, maxAmountValue],
+        connect: true,
+        step: 1,
+        range: {
+            'min': 10,
+            'max': 99
+        }
+    });
+
+    // Update input values when the slider changes
+    priceRange.noUiSlider.on('update', function (values) {
+        minAmountValue = parseFloat(values[0]);
+        maxAmountValue = parseFloat(values[1]);
+        minAmountInput.value = minAmountValue;
+        maxAmountInput.value = maxAmountValue;
+    });
+
+    // Handle form submission
+    filterButton.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        const form = document.getElementById('filter-form');
+        const formData = new FormData(form);
+
+        fetch(filtered_price + '?' + new URLSearchParams(formData), {
+            method: 'GET',
+        }).then(response => {
+            if (response.ok) {
+                return response.text(); // Parse the response as text
+            } else {
+                throw new Error('Network response was not ok');
+            }
+        }).then(data => {
+            // Update the results container
+            document.getElementById('filtered-results').innerHTML = data;
+        
+            // Check if you need to restore the initial values
+            if (minAmountInput.value !== '$' + initialMinAmount || maxAmountInput.value !== '$' + initialMaxAmount)  {
+                minAmountInput.value = '$' + initialMinAmount;
+                maxAmountInput.value = '$' + initialMaxAmount;
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+    });
+});
+</script>
+        
+                
+
+    {% endblock content  %}

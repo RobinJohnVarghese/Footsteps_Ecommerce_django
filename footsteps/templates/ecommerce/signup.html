@@ -1,0 +1,142 @@
+<!-- templates/user/user_signup.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FootSteps</title>
+    <link rel="shortcut icon" type="image/png" href="../static/img/logo3.png" />
+    <!-- Include Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Add custom styles for the page */
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 500px;
+            margin: 100px auto;
+            border: 1px solid #ddd;
+            padding: 30px;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+{%include '../messages.html'%}
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">User Signup</h1>
+        <form method="post"  onsubmit="return validateRegisterForm()" >
+            {% csrf_token %}
+
+            {% comment %} <div class="form-group">
+                <label for="name">User Name:</label>
+                <input type="text" name="username" class="form-control" required>
+            </div> {% endcomment %}
+
+            <div class="form-group">
+                <label for="name">First Name:</label>
+                <input type="text" name="first_name" id = 'first_name' pattern="[A-Z a-z]+" title="Please enter alphabetic characters only" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Last Name:</label>
+                <input type="text" name="last_name" id = 'last_name'  pattern="[A-Z a-z]+" title="Please enter alphabetic characters only" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" name="email" id = 'email' class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="mobile">Mobile:</label>
+                <input type="tel" name="mobile" id = 'mobile'  pattern="[0-9]+" title="Please enter numbers only" class="form-control" required maxlength="10">
+            </div>
+
+            {% comment %} <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" class="form-control" required>
+            </div> {% endcomment %}
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <div class="input-group">
+                    <input type="password" name="password" class="form-control" id="passwordInput" required>
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="togglePassword">
+                            <i class="fa fa-eye" aria-hidden="true" id="toggleIcon"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="mobile">Referal Id:</label>
+                <input type="text" name="referral_code" id = 'referral_id' >
+            </div>
+            
+
+            <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+        </form>
+        <div class="text-center">
+           Already have an account? <a href="{% url 'signin' %}" class="btn btn-link">Sign In</a>
+        </div>
+
+        {% if error %}
+            <div class="alert alert-danger mt-3">
+                {{ error }}
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function validateRegisterForm() {
+        var first_name = document.getElementById("first_name").value;
+        var last_name = document.getElementById("last_name").value;
+        var mobile = document.getElementById("mobile");
+        
+        var phone = parseInt(mobile.value);
+    
+        
+        if (first_name.trim() === "") {
+        alert("Only white spaces in First Name.");
+        return false; // Prevent form submission
+        }
+        
+        if (last_name.trim() === "") {
+        alert("Only white spaces in Last Name.");
+        return false; // Prevent form submission
+        }
+       
+        if (phone.toString().length < 10 || phone.toString().length >10) {
+        alert("Enter Valid Phone Number");
+        return false; // Prevent form submission
+        }
+        
+        return true; // Allow form submission
+        }
+        </script>
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        const passwordInput = document.getElementById('passwordInput');
+        const togglePassword = document.getElementById('togglePassword');
+        const toggleIcon = document.getElementById('toggleIcon');
+    
+        togglePassword.addEventListener('click', function () {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        });
+    </script>
+</body>
+</html>

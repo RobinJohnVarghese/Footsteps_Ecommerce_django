@@ -1,0 +1,81 @@
+<!-- templates/user_side/login.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FootSteps</title>
+    <link rel="shortcut icon" type="image/png" href="../static/img/logo3.png" />
+    <!-- Include Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 100px;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 30px;
+        }
+    </style>
+</head>
+{%include '../messages.html'%}
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <h1 class="text-center mb-4">Login</h1>
+                    <form method="post" class="mb-4" >
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label for="email">username:</label>
+                            <input type="email" name="username" class="form-control"  required>
+                        </div>
+                        {% comment %} <div class="form-group">
+                            <label for="password">Password:{{password}}</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div> {% endcomment %}
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <div class="input-group">
+                                <input type="password" name="password" class="form-control" id="passwordInput" required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="togglePassword">
+                                        <i class="fa fa-eye" aria-hidden="true" id="toggleIcon"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS (Optional) -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        const passwordInput = document.getElementById('passwordInput');
+        const togglePassword = document.getElementById('togglePassword');
+        const toggleIcon = document.getElementById('toggleIcon');
+    
+        togglePassword.addEventListener('click', function () {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        });
+    </script>
+</body>
+</html>
