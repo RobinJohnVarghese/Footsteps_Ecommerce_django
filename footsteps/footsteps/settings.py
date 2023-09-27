@@ -13,8 +13,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from decouple import config
+from dotenv import load_dotenv
 # import environ
-
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,10 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-amp5p(#6%r2kl^$xk)30h49^adalfw@rz_3e6#6r)w5t*8)()v'
-
+# os.environ['SECRET_KEY'] = 'SECRET_KEY'
+# SECRET_KEY = os.environ.get('SECRET_KEY')
 SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
+
 DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = []
 
@@ -84,15 +87,16 @@ WSGI_APPLICATION = 'footsteps.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASE_URL = config('DATABASE_URL')
+#DATABASE_URL = config('DATABASE_URL')
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-		'NAME': 'footstep',
-		'USER': 'root',
-		'PASSWORD': 'Robin@123',
+        'ENGINE':'django.db.backends.mysql',
+        'NAME':config('NAME'),
+        'USER':config('USER'), 
+		'PASSWORD': config('PASSWORD'),
 		'HOST':'localhost',
-		'PORT':'3306',
+ 		'PORT':'3306',
+        
     }
 }
 
