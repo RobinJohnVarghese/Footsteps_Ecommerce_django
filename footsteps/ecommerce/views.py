@@ -186,6 +186,16 @@ def signup(request):
                 user_wallet = Wallet(user=emp,amount=0)
                 user_wallet.save()
                 messages.error(request, 'Invalid referral code.')
+        else:
+            try:
+                user = User.objects.create_user(username=email,password=password,first_name=first_name,last_name=last_name)
+                user.save()
+                emp = Userprofile(user=user,email=email,firstname=first_name,mobile = mobile,lastname=last_name,password=password,referral_id=referral_id)
+                emp.save()
+                user_wallet = Wallet(user=emp,amount=0)
+                user_wallet.save()
+            except:
+                pass
         return redirect('signin')
     return render(request,"ecommerce/signup.html")
 

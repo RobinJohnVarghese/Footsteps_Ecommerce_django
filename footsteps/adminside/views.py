@@ -176,7 +176,7 @@ def productmanagement(request):
     products = Product.objects.all()
     categories=Category.objects.all()
     context = {'products':products,'categories':categories}
-    return render(request,'adminside\productmanagement .html',context)
+    return render(request,'adminside\productmanagement.html',context)
 
 @login_required(login_url='adminside')
 def admin_product_search(request):
@@ -190,7 +190,7 @@ def addproduct(request):
         product_name = request.POST.get('product_name')
         if Product.objects.filter(product_name=product_name).exists():
             error_message = 'Productname already exists. Please choose a different productname.'
-            return render(request, 'productmanagenent.html', {'error_message': error_message})
+            return render(request, 'productmanagenent.html',{'error_message': error_message})
         else:
             product_name = request.POST.get('product_name')
             slug = request.POST.get('product_name')
