@@ -8,7 +8,7 @@ django-filter==23.2
 django-paypal==2.0
 environ-config==23.2.0
 idna==3.4
-mysqlclient==2.2.0
+
 Pillow==10.0.0
 python-decouple==3.8
 pytz==2023.3
