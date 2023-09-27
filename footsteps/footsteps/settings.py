@@ -30,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY')
 # DEBUG = True
 
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -87,13 +87,12 @@ WSGI_APPLICATION = 'footsteps.wsgi.application'
 #DATABASE_URL = config('DATABASE_URL')
 DATABASES = {
     'default': {
-        'ENGINE':'django.db.backends.mysql',
+        'ENGINE':'django.db.backends.postgresql_psycopg2',
         'NAME':config('NAME'),
         'USER':config('USER'), 
 		'PASSWORD': config('PASSWORD'),
 		'HOST':'localhost',
- 		'PORT':'3306',
-        
+ 		'PORT':'',
     }
 }
 
@@ -159,12 +158,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'shop'
 
-
-
-
-
 # Emailing settings
-
 EMAIL_BACKEND = config('EMAIL_BACKEND')
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_FROM = config('EMAIL_FROM')
@@ -172,5 +166,4 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-
 PASSWORD_RESET_TIMEOUT = 14400
