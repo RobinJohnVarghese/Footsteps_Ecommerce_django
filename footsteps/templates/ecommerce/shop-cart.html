@@ -127,65 +127,6 @@
 </script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-{% comment %} <script>
-    $(document).ready(function() {
-        $(document).on('click', '.dec-link, .inc-link', function(event) {
-            event.preventDefault();
-            const url = $(this).attr('href');
-            const itemId = $(this).parent().find('input').attr('id').split('-')[1];
-
-            updateQuantity(url, itemId);
-        });
-
-        function updateQuantity(url, itemId) {
-            $.ajax({
-                url: url,
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    if (data.error) {
-                        alert(data.error);
-                    } else if (data.removed) {
-                        alert('Product Removed From Cart');
-                        location.reload();
-                    } else {
-                        // Update the input field with the corresponding item ID
-                        const quantityInput = $('#item-' + itemId + '-quantity');
-                        quantityInput.val(data.quantity);
-
-                        // Update the total price
-                        const price = parseFloat(data.price); // Convert to a floating-point number
-                        const quantity = parseInt(data.quantity); // Convert to an integer number
-                        const total = price * quantity;
-                        const totalPriceElement = quantityInput.closest('tr').find('.shoping_cart_total');
-                        totalPriceElement.text('$' + total.toFixed(2));
-
-
-
-
-                        //console.log('price '+price+' data.price '+data.price)
-                        //console.log('quantity'+quantity)
-                        //console.log('total'+total)
-                        console.log('total_existing '+total_existing)
-
-
-                        // Update cart total, tax, and grand total
-                        const cartTotalElement = $('.cart-total');
-                        const taxElement = $('.tax');
-                        const grandTotalElement = $('.grand-total');
-                        cartTotalElement.text('$' + data.total.toFixed(2));
-
-                        taxElement.text('$' + data.tax.toFixed(2));
-                        grandTotalElement.text('$' + data.grant_total.toFixed(2));
-                    }
-                },
-                error: function(error) {
-                    console.log('Error:', error);
-                }
-            });
-        }
-    });
-</script> {% endcomment %}
 
 <script>
 $(document).ready(function () {

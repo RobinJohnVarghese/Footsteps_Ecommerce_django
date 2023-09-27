@@ -29,7 +29,6 @@
                 <th scope="col">Date</th>
                 <th scope="col">Status</th>
                 <th scope="col">Invoice</th>
-                {% comment %} <th scope="col">Details</th> {% endcomment %}
                 <th scope="col">Action</th>
               </tr>
             </thead>
@@ -43,7 +42,6 @@
                       <td>{{order.created_at}}</td>
                       <td>{{order.status}}</td>
                       <td><a href="{% url 'invoice_details' order.id%}"  class="btn btn-warning"> Invoice</a></td>
-                      {% comment %} <td><a href="{% url 'details' order.id%}"  class="btn btn-info"> Details</a></td> {% endcomment %}
                       <td>
                         <a href="{% url 'details' order.id%}"  class="btn btn-info"> Details</a>
                         {%if order.status == 'Completed'%}

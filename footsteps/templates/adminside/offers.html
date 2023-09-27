@@ -247,14 +247,6 @@ table.table .avatar {
                   <div class="table-wrapper">
                       <div class="table-title">
                           <div class="row">
-                              <div class="col-sm-6">
-                                  {% comment %} <h2>Manage <b>categories</b></h2>
-                                   <div id="searchResults">
-                                      <form method="GET" action="{% url 'admin_category_search' %}">
-                                      <input name="query" value="{{ query }}" type="text" id="searchInput" placeholder="Search...">
-                                      <button style="color:blue;" type="submit">Search</button>
-                                      </form>
-                                  </div> {% endcomment %}
                               </div>
                               <div class="col-sm-6">
                                   <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Offer</span></a>
@@ -291,7 +283,6 @@ table.table .avatar {
                                   <td>{{offer.discount}}</td>
                                   <td>{{offer.end_date}}</td>
                                   <td>
-                                      {% comment %} <a href="#editEmployeeModal-{{forloop.counter}}" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a> {% endcomment %}
                                       <a href="#deleteEmployeeModal-{{forloop.counter}}" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
                                   </td>
                                           
@@ -313,10 +304,6 @@ table.table .avatar {
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                             </div>
                             <div class="modal-body">					
-                                {% comment %} <div class="form-group">
-                                    <label>Coupon Code</label>
-                                    <input name="coupon_code" type="text" class="form-control" required>
-                                </div> {% endcomment %}
                                 <div class="mb-3">
                                   <label for="category">Category</label>
                                   <select class="form-control" id="category_name" name="category_id">
@@ -343,40 +330,6 @@ table.table .avatar {
                     </div>
                   </div>
               </div>
-              {% comment %} <!-- Edit Modal HTML -->
-              {% for i in offers %}
-              <div id="editEmployeeModal-{{forloop.counter}}" class="modal fade">
-                  <div class="modal-dialog">
-                      <div class="modal-content">
-                          <form action="/updateoffer/{{i.id}}" method = "post"> 
-                              {% csrf_token %}
-                              <div class="modal-header">						
-                                  <h4 class="modal-title">update Offer</h4>
-                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                              </div>
-                              <div class="modal-body">					
-                                  <div class="form-group">
-                                      <label>Category Name</label>
-                                      <input value="{{i.category}}" name="category_id" type="text" class="form-control" readonly>
-                                  </div>
-                                  <div class="form-group">
-                                    <label>Discount</label>
-                                    <input value="{{i.discount}}" name="discount_price" type="text" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                  <label>Expire Date</label>
-                                  <input value="{{i.expiry_date}}" name="is_expired" type="date" class="form-control" required>
-                              </div>
-                              </div>
-                              <div class="modal-footer">
-                                  <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                                  <input type="submit" class="btn btn-info" value="Save">
-                              </div>
-                          </form>
-                      </div>
-                  </div>
-              </div>
-              {% endfor %} {% endcomment %}
               <!-- Delete Modal HTML -->
               {% for i in offers  %}
               <div id="deleteEmployeeModal-{{forloop.counter}}" class="modal fade">

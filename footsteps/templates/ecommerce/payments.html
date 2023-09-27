@@ -124,11 +124,6 @@
 						<dl class="dlist-align" style="display: flex;justify-content: space-between;">
 							<dt>Coupon Amount:</dt>
 							<dd class="text-right text-success" id="coupon-amount">$ {{ discount_price }}</dd>
-							{% comment %} {% if discount_price > 0 %}
-								<dd class="text-right text-success" id="coupon-amount">$ {{ discount_price }}</dd>
-							{% else %}
-								<dd class="text-right text-success" id="coupon-amount">$ 0</dd>
-							{% endif %} {% endcomment %}
 						</dl>
 						<dl class="dlist-align" style="display: flex;justify-content: space-between;">
 							<dt>Grand Total:</dt>
@@ -150,16 +145,7 @@
 								<i><strong class="text-lg">Wallet Payment</strong></i>
 							</button>
 						</form>
-						
-						
-
-
-
-						{% comment %} <div>
-							<a class="btn btn-warning col-12" href="{% url 'wallet_payment' order.id%}"><i><strong class="text-lg">Wallet Payment</strong></i></a>
-						</div> {% endcomment %}
 						<br>
-
 						<div id="paypal-button-container">
 							<!-- PayPal Button Will Load -->
 						</div>
@@ -172,9 +158,6 @@
 						{% csrf_token %}
 						<input name='order_id' type="hidden" value={{order.id}}>
 						<input type="text" name='coupon_obj' placeholder="Enter your coupon code">
-						{% comment %} {%for message in messages%}
-						{{message}}
-						{%endfor%} {% endcomment %}
 						<button type="submit" class="site-btn">Apply</button>
 					</form>
 				</div>
@@ -209,6 +192,7 @@
 <script>
 
 	function getCookie(name) {
+		
 		
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -255,10 +239,7 @@
 					}
 				}]
 			});
-			console.log("***********************************************")
-			console.log("***********************************************")
-			console.log("***********************************************")
-			console.log("***********************************************"+amount)
+
 		},
 
 		// Finalize the transaction
@@ -286,9 +267,7 @@
 				  .then((response) => response.json())
 				  .then((data) => {
 						window.location.href = redirect_url + '?order_number='+data.order_number+'&payment_id='+data.transID;
-						console.log("*************************************************************************************")
-						console.log("*************************************************************************************")
-						console.log("*************************************************************************************")
+
 					});
 				}
 			});

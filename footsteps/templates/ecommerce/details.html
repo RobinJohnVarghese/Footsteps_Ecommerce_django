@@ -27,9 +27,6 @@
                         <figure class="itemside align-items-center">
                             <div class="aside"><img src="{{ order_item.product.images.url }}" class="img-sm" width="80"></div>
                             <figcaption class="info">
-                                {% comment %} <a href="{%url 'product_details' product_id=cart_item.product.id%}" class="title text-dark">{{ cart_item.product.product_name }}</a>
-                                {{cart_item.variations.Color_id.color}} - "{{cart_item.variations.size}}"inch {% endcomment %}
-                                
                                 <p class="text-muted small">
                                     {% if order_item.variations.all %}
                                     {% for item in order_item.variations.all %}

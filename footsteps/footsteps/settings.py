@@ -84,6 +84,7 @@ WSGI_APPLICATION = 'footsteps.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+DATABASE_URL = config('DATABASE_URL')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',

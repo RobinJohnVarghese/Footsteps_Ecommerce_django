@@ -25,62 +25,6 @@ from django.conf import settings
 # Create your views here.
 
 
-
-# def register_user(request):
-#     if request.method == 'POST':
-#         email = request.POST.get('email')
-#         password = request.POST.get('password')
-#         name = request.POST.get('name')
-#         mobile = request.POST.get('mobile')
-#         confirm_password = request.POST.get('confirm_password')
-#         referral_code = request.POST.get('ref_code')  # Get the referral ID from the form
-#         # Check if the email is already registered
-#         if UserProfile.objects.filter(email=email).exists():
-#             return render(request, 'user_side/user_signup.html', {'error': 'Email already registered.'})
-#         # Check if the passwords match
-#         if password != confirm_password:
-#             return render(request, 'user_side/user_signup.html', {'error': 'Passwords do not match.'})
-#         # Create a new User instance and save it to the database
-#         user = User.objects.create_user(email, email=email, password=password)
-#         user.save()
-#         # Create a new UserProfile instance and save it to the database
-#         user_profile = UserProfile.objects.create(user=user, email=email, name=name, mobile=mobile)
-#         # Generate OTP and save it to the database
-#         otp_value = generate_otp()
-#         otp = OTP.objects.create(user=user)
-#         otp.otp = otp_value
-#         otp.save()
-#         # Send the OTP to the user's email
-#         send_otp_email(email, otp_value)
-#         print('******send_otp_email******', otp_value)
-#         # Generate a unique referral ID for the user
-#         referral_id = generate_unique_referral_id()
-#         user_profile.referral_id = referral_id
-#         user_profile.save()
-#         # Create a Wallet object for the new user
-#         user_wallet = Wallet.objects.get_or_create(user=user, defaults={'amount': 0})
-#         # Check if a referral code is provided
-#         if referral_code:
-#             try:
-#                 referrer = UserProfile.objects.get(referral_id=referral_code)       
-#                 # Credit the referrer's wallet
-#                 referrer_wallet = Wallet.objects.get(user=referrer.user)
-#                 referrer_wallet.amount += 250  # Adjust the amount as needed
-#                 referrer_wallet.save()
-#                 # Credit the new user's wallet
-#                 user_wallet = Wallet.objects.get(user=user)
-#                 user_wallet.amount += 250  # Adjust the amount as needed
-#                 user_wallet.save()
-#             except UserProfile.DoesNotExist:
-#                 messages.error(request, 'Invalid referral code.')
-#         # Prepare the context for OTP verification view
-#         context = {'user': user_profile.user, 'is_login': False}
-#         return redirect('verify_otp', email=email)
-#     return render(request, 'user_side/user_signup.html')
-
-
-
-
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def home(request):
     products = Product.objects.all().filter(is_available=True).order_by('id')[:8]
@@ -224,7 +168,6 @@ def generate_unique_referral_id(length=8):
 def shop(request, category_slug=None):
     categories = None
     products = None
-
     if category_slug != None:
         categories = get_object_or_404(Category, slug=category_slug)
         products = Product.objects.filter(category=categories, is_available=True)
@@ -307,17 +250,6 @@ def search(request,category_slug=None):
     return render (request,'ecommerce/shop.html',context)
 
 
-# def profile(request):
-#     current_user = request.user
-#     user = Userprofile.objects.get(user=current_user)
-#     order = Order.objects.filter(user_id=request.user.id,is_ordered =True)
-#     orders_count = order.count()
-#     context = {
-#         'user':user,
-#         'orders_count':orders_count
-#     }
-#     return render(request,'ecommerce/dashboard.html',context)
-
 
 
 @login_required(login_url='signin')
@@ -354,18 +286,13 @@ def my_orders(request):
 def invoice_details(request,order_id):
     orders = Order.objects.get(id=order_id)
     order_items = OrderProduct.objects.filter(order=orders)
-    # print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",orders.payment_No)
-    # discount=orders.order_total-orders.discount_amount
-    
-
     # Calculate the Grand Total
     grand_total = orders.order_total - orders.discount_Price
     context ={
         # 'discount':discount,
         "order_items":order_items,
         'orders':orders,
-        'grand_total':round(grand_total,2)
-        
+        'grand_total':round(grand_total,2)  
     }
     return render(request,'ecommerce/invoice.html',context)
 
@@ -563,7 +490,6 @@ def place_order(request, total=0, quantity=0,):
         data.order_note = order_note
         data.order_total = grand_total
         data.tax = tax
-        # data.amount_recived = grand_total
         data.ip = request.META.get('REMOTE_ADDR')
         data.save()
 
@@ -576,7 +502,6 @@ def place_order(request, total=0, quantity=0,):
         order_number = current_date + str(data.id)
         data.order_number = order_number
         data.save()
-        # return HttpResponse("Order placed successfully!")
         wallet = Wallet.objects.get(user=user)
         order = Order.objects.get(user=user, is_ordered=False, order_number=order_number)
         user=Userprofile.objects.get(user=current_user)
@@ -599,9 +524,7 @@ def place_order(request, total=0, quantity=0,):
         return render(request, 'ecommerce/payments.html', context)
     else:
         return redirect('checkout')
-    
-    # print("#####################################user#########################")
-    # return render(request,'ecommerce/change_password.html')
+
 
 
 
@@ -609,28 +532,17 @@ def payments1(request):
     current_user = request.user
     user=Userprofile.objects.get(user=current_user)
     discount_price = request.GET.get('discount_price')
-    # if  discount_price:
-    #     # total=order.order_total-discount_price
-    #     discount_price = float(discount_price)
-    #     order.discount_Price=discount_price
-    #     total = order.order_total - discount_price
-        
-    #     order.save()
-    # order = Order.objects.get(user=user, is_ordered=False, id=body['orderID'])
-    
     body = json.loads(request.body)
     payment = Payment(
             user = user,
             payment_id = body['transID'],
             payment_method = body['payment_method'],
-            # amount_paid = order.order_total,
             amount_paid = body['payedAmount'],
             status = body['status'],
             
         )
     payment.save()
     order = Order.objects.get(user=user, is_ordered=False, id=body['orderID'])
-    # order.payment = payment
     order.payment = payment
     order.is_ordered = True
     order.discount_Price=body['discountprice']
@@ -682,11 +594,6 @@ def order_complete(request):
             order.discount_amount=total
             order.save()
         grand_total= order.order_total - order.discount_Price
-        # Calculate the coupon amount
-        
-        # discount_price = 0  # Default to 0
-        # if order.coupon_applied:  # Assuming you have a flag for coupon application in your Order model
-        #     discount_price = order.coupon_discount_price
 
         context = {
             'order': order,
@@ -709,7 +616,6 @@ def order_complete(request):
 
 def cash_on_delivery(request, order_id):
     discount_price = request.GET.get('discount_price')
-    print("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",discount_price)
     current_user = request.user
     order = Order.objects.get(id=order_id)
     order.is_ordered = True
@@ -736,9 +642,6 @@ def cash_on_delivery(request, order_id):
         order.discount_amount=order.order_total
         order.discount_price=0
         order.save()
-    # recived = order.order_total - order.discount_Price
-    # order.amount_recived=recived
-    # order.save()
     cart=CartItem.objects.filter(user=current_user)
     cart.delete() 
     context = {'order':order}
@@ -788,9 +691,7 @@ def coupon_check(request):
         if not coupon_obj.exists() or len(coupon_obj)!=1:
             messages.warning(request,'Invalid Coupon')
             return redirect('coupon_payment', order_id)
-        # if coupon_obj in CouponApplied:
-        #     messages.info(request, 'Coupon is already applied to this order.')
-        #     return redirect('coupon_payment', order_id)
+
         
         discount_price = 0
         couponobj = Coupon.objects.get(coupon_code__icontains = coupon)
@@ -818,9 +719,6 @@ def coupon_check(request):
             total += (cart_item.variations.price * cart_item.quantity)
             quantity += cart_item.quantity
         tax = (2 * total)/100
-        # grand_total = total + tax
-        # if couponobj.minimum_amount <= grand_total:
-        #     grand_total -= couponobj.discount_price
         grand_total = order.order_total - couponobj.discount_price
 
         context = {
@@ -858,12 +756,7 @@ def filtered_price(request):
     else:
         # Handle the case where no price range is provided
         products = Product.objects.all()
-        
-    # return JsonResponse({
-    #         "products": products,
-    #         "min_amount":min_amount,
-    #         "max_amount":max_amount
-    # })
+
     context = {
         "products": products,
         "min_amount":min_amount,
@@ -877,30 +770,14 @@ def wallet(request):
     current_user = request.user
     user = Userprofile.objects.get(user=current_user)
     wallet = Wallet.objects.get(user=user)
-    
-    # current_user = request.user
-    # try:
-    #     wallet = Wallet.objects.get(user=current_user)
-    # except Wallet.DoesNotExist:
-    #     wallet = Wallet.objects.create(user=current_user, amount=0)
-    # wallet_amount = wallet.amount
-
-    # # Retrieve the referral ID from the user's profile
-    # user = Userprofile.objects.get(user=current_user)
-    # referral_id = user.referral_id
-    
 
     context = {
-                # 'wallet_amount': wallet_amount,
-                # 'referral_id': referral_id,
                 'user1':user,
                 'wallet':wallet
                 }
     return render(request, 'ecommerce/wallet.html',context)
 
 def wallet_payment(request,order_id):
-    
-    
     if request.method == 'POST':
         discount_price = request.POST.get('discount_price')
         grand_total = request.POST.get('grand_total') 

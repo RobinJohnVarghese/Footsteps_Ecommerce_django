@@ -11,6 +11,11 @@ from django.views.decorators.cache import cache_control
 from django.conf import settings
 import os
 from django.db.models import Max,Min,Count,Avg
+from django.db.models import Sum
+from django.db.models.functions import ExtractMonth, ExtractYear,ExtractWeek,ExtractDay,TruncMonth
+from django.utils.timezone import now
+import calendar
+
 # Create your views here.
 
 
@@ -19,7 +24,6 @@ def adminside(request):
     if request.method == "POST":
         email = request.POST.get('username')
         password = request.POST.get('password')
-        print(email, password, "***********************")
         user = authenticate(request, username=email,password=password)
         if user is not None and user.is_staff:
             login(request, user)
@@ -128,7 +132,7 @@ def categorymanagement(request):
 def admin_category_search(request):
     query = request.GET['query']
     cat = Category.objects.filter(category_name__icontains=query)
-    return render(request, 'adminside/categorymanagement.html',{'categories': cat})#'ud1': ud1
+    return render(request, 'adminside/categorymanagement.html',{'categories': cat})
 
 @login_required(login_url='adminside')
 def addcategory(request):
@@ -145,7 +149,7 @@ def addcategory(request):
                 slug = slug,)
             categories.save()
             return redirect('categorymanagement')
-    return render(request,'adminside\categorymanagement.html .html')
+    return render(request,'adminside\categorymanagement.html')
 
 @login_required(login_url='adminside')     
 def updatecategory(request,id):
@@ -182,7 +186,7 @@ def productmanagement(request):
 def admin_product_search(request):
     query = request.GET['query']
     product = Product.objects.filter(product_name__icontains=query)
-    return render(request, 'adminside/productmanagement.html',{'products': product})#'ud1': ud1
+    return render(request, 'adminside/productmanagement.html',{'products': product})
 
 @login_required(login_url='adminside')
 def addproduct(request):
@@ -286,7 +290,6 @@ def addvariants(request,product_id):
             color_v =ColorVariant.objects.get(product_id=product,color=color)
             size_v =SizeVariant(product_id=product,Color_id=color_v,size=size,stock=stock,price=price, real_price=price)
             size_v.save()
-            # error_message = 'color already exists. Please choose a different color.'
             return redirect('variants',product_id)
         else:
             color_v =ColorVariant(product_id=product,color=color)
@@ -404,17 +407,7 @@ def filtered_sales(request):
     # Filter products based on the price range
     # if start_date is not None and end_date is not None:
     orders = Order.objects.filter(created_at__gte=from_date, created_at__lte=to_date)
-    
-    # else:
-        # Handle the case where no price range is provided
-    # orders = Order.objects.filter(Q(is_ordered=True) & ~Q(status='Cancelled')).order_by('-created_at')
-    
-        
-    # return JsonResponse({
-    #         "products": products,
-    #         "min_amount":min_amount,
-    #         "max_amount":max_amount
-    # })
+
     context = {
         "sales": orders,
         "start_date":start_date,
@@ -496,8 +489,6 @@ def deletecoupon(request,id):
 def offer_management(request):
     offers=Offer.objects.all()
     categories=Category.objects.all()
-    print(offers)
-    print(categories)
     context = {
         'offers':offers ,
         'categories':categories
@@ -512,7 +503,6 @@ def addoffer(request):
             error_message = 'This category already have an Offer exists. Please choose a different Category.'
             messages.error(request,"This category already have an Offer exists. Please choose a different Category.")
             return redirect('offer_management')
-            # return render(request, 'adminside\offers.html', {'error_message': error_message})
         else:
             category_id = request.POST.get('category_id')
             discount = request.POST.get('discount_price')
@@ -539,19 +529,6 @@ def addoffer(request):
     context={'categories':categories}
     return render(request,'adminside\offers.html',context)
 
-# @login_required(login_url='adminside')
-# def updateoffer(request,id):
-#     if request.method =='POST':
-#         discount = request.POST.get('discount_price')
-#         end_date = request.POST.get('is_expired')
-                 
-#         offer = Offer.objects.get(id=id)
-#         offer.discount= discount
-#         offer.end_date= end_date
-
-#         offer.save()  
-#         return redirect('offer_management')
-#     return render(request,'adminside\offers.html')
 
 @login_required(login_url='adminside')
 def deleteoffer(request,id):
@@ -577,145 +554,11 @@ def deleteoffer(request,id):
 ###-----End-----###
 
 
-
-
-# from django.shortcuts import render
-# from django.db.models import Sum
-# from django.db.models.functions import ExtractMonth, ExtractYear
-
-
-# def calculate_total_order_amount():
-#     # Use the Django ORM to calculate the sum of order_total
-#     total_amount = Order.objects.aggregate(Sum('order_total'))['order_total__sum']
-
-#     # Handle the case when there are no orders
-#     if total_amount is None:
-#         total_amount = 0.0
-
-#     return total_amount
-
-# def calculate_monthly_order_totals():
-#     # Use the Django ORM to calculate monthly order totals
-#     monthly_totals = (
-#         Order.objects
-#         .annotate(year=ExtractYear('created_at'), month=ExtractMonth('created_at'))
-#         .values('year', 'month')
-#         .annotate(total=Sum('order_total'))
-#         .order_by('year', 'month')
-#     )
-
-#     return monthly_totals
-
-# def graph_chart_management(request):
-#     # Calculate total order amount
-#     total_order_amount = calculate_total_order_amount()
-#     print(total_order_amount)
-#     # Calculate monthly order totals
-#     monthly_totals = calculate_monthly_order_totals()
-#     print("1111111111111111",monthly_totals[0]['total'])
-    
-#     users_count = Profile.objects.count()
-#     total_users_count =int(users_count - 1 )
-#     product_count = Product.objects.count()
-#     category_count = Category.objects.count()
-
-#     # Now, the variable 'total_users_count' contains the total count of users
-#     print(f"Total Users Count: {total_users_count}")
-    
-    
-    
-#     context = {
-#         'total_order_amount': total_order_amount,
-#         'monthly_totals': monthly_totals[0]['total'],
-#         'total_users_count':total_users_count,
-#         'product_count':product_count,
-#         'category_count':category_count
-#     }
-
-#     return render(request, 'adminside\graph_chart.html', context)
-
-
-
-# # def offer_management(request):
-# #     return render(request, 'adminside\offers.html')
-
-
-
-
-
-# def chart_management(request):
-#     users_count = Profile.objects.count()
-#     total_users_count =int(users_count - 1 )
-#     product_count = Product.objects.count()
-#     order = Order.objects.filter(is_ordered=True).count()
-    
-#     variants =SizeVariant.objects.all()
-#     monthly_sales = get_monthly_sales_data()
-    
-#     context = {
-#         'total_users_count':total_users_count,
-#         'product_count':product_count,
-#         'order':order,
-#         'variants':variants,
-#         'monthly_sales':monthly_sales
-#     }
-#     return render(request,'adminside\chart.html',context)
-
-# from django.db.models import Sum
-# from django.db.models.functions import ExtractMonth, ExtractYear
-
-# def get_monthly_sales_data():
-#     monthly_sales = (
-#         Order.objects
-#         .filter(is_ordered=True)  # You may want to filter by specific criteria
-#         .annotate(year=ExtractYear('created_at'), month=ExtractMonth('created_at'))
-#         .values('year', 'month')
-#         .annotate(total_sales=Sum('order_total'))
-#         .order_by('year', 'month')
-#     )
-#     print("2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222",monthly_sales)
-#     print("2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222")
-#     return monthly_sales
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-from django.db.models import Sum
-from django.db.models.functions import ExtractMonth, ExtractYear,ExtractWeek,ExtractDay,TruncMonth
-from django.utils.timezone import now
-import calendar
-
-
-def graph_chart_management(request):
-    # Calculate total order amount
-    # total_order_amount = calculate_total_order_amount()
-    # print(total_order_amount)
-    # Calculate monthly order totals
-    # monthly_totals = get_monthly_total_amount()
-    # print("1111111111111111",monthly_totals[0]['total'])
-    
+def graph_chart_management(request):   
     users_count = Profile.objects.count()
     total_users_count =int(users_count - 1 )
     product_count = Product.objects.count()
     category_count = Category.objects.count()
-
-    # Now, the variable 'total_users_count' contains the total count of users
-    print(f"Total Users Count: {total_users_count}")
-    
-    
-    
     context = {
         # 'total_order_amount': total_order_amount,
         # 'monthly_totals': monthly_totals,
@@ -725,8 +568,6 @@ def graph_chart_management(request):
     }
 
     return render(request, 'adminside\graph_chart.html', context)
-
-
 
 
 def chart_management(request):
@@ -746,40 +587,10 @@ def chart_management(request):
 
     months = list(monthly_totals_dict.keys())
     totals = list(monthly_totals_dict.values())
-        
-    # month,total = monthly_order_totals()[0], monthly_order_totals()[1]
-    # weeks,weekly_totals = weekly_order_totals()[0],weekly_order_totals()[1]
-    print("ggggggggggggggggggggggggggggggggggggggggggggggg",monthly_order_totals)
-    print("ggggggggggggggggggggggggggggggggggggggggggggggg",totals)
-    print("ggggggggggggggggggggggggggggggggggggggggggggggg",months)
-    # print("ggggggggggggggggggggggggggggggggggggggggggggggg",type(total))
-    
-    # order_list = Order.objects.filter(is_ordered=True)
-    # orders=order_list.annotate(month=ExtractMonth('created_at')).values('month').annotate(count=Count('id')).values('month','count')
-    # orders_day=order_list.annotate(day=ExtractDay('created_at')).values('day').annotate(count=Count('id')).values('day','count')
-    # orders_week=order_list.annotate(week=ExtractWeek('created_at')).values('week').annotate(count=Count('id')).values('week','count')
-    # orders_year=order_list.annotate(year=ExtractYear('created_at')).values('year').annotate(count=Count('id')).values('year','count')
-    # # orders = Order.objects.values('created_at__month').annotate(count=Count('id')).order_by('created_at__month')
-    # # orders=CartOrder.objects.annotate(month=ExtractMonth('order_dt')).values('month').annotate(count=Count('id')).values('month','count')
-    # print("###########################################################################################",order)
-    # print("###########################################################################################orders",orders)
-    # print("###########################################################################################orders_day",orders_day)
-    # print("###########################################################################################orders_week",orders_week)
-    # print("###########################################################################################orders_year",orders_year)
-    # # print("###########################################################################################",created_at)
+
     monthNumber=[]
     totalOrders=[]
-    
-    
-    
-    # for d in orders:
-    #     # print("#####################################################",d.month,d.created_at)
-    #     month = d['month']
-        
-    #     if month is not None:
-    #         monthName = calendar.month_name[d['month']]
-    #         monthNumber.append(monthName)
-    #         totalOrders.append(d['count'])
+
             
     variants =SizeVariant.objects.all()
    
@@ -791,22 +602,11 @@ def chart_management(request):
         'variants':variants,
         'months':months,
         'totals':totals,
-        # 'month':month,
-        # 'total':total,
-        # 'weeks':weeks,
-        # 'weekly_totals':weekly_totals,
-     
-        # 'monthNumber':monthNumber,
-        # 'totalOrders':totalOrders
+
        
     }
     return render(request,'adminside\chart.html',context)
 
-
-
-
-
-########################################################################################################################
 
 from collections import defaultdict
 from datetime import datetime
@@ -830,35 +630,7 @@ def monthly_order_totals():
     return months, totals
 
 
-# from collections import defaultdict
-# from datetime import datetime, timedelta
 
-# def weekly_order_totals():
-#     # Get all completed orders
-#     completed_orders = Order.objects.filter(is_ordered=True)
-
-#     # Create a defaultdict to store weekly totals
-#     weekly_totals_dict = defaultdict(float)
-
-#     # Define the start date (e.g., your project's start date)
-#     start_date = datetime(2023, 1, 1)  # Adjust the start date as needed
-
-#     # Iterate over completed orders and calculate weekly totals
-#     for order in completed_orders:
-#         order_date = order.created_at.date()
-#         week_start = start_date
-#         while order_date >= week_start:
-#             week_end = week_start + timedelta(days=6)
-#             if week_start <= order_date <= week_end:
-#                 week_key = week_start.strftime('%d-%m-%Y') + ' to ' + week_end.strftime('%d-%m-%Y')
-#                 weekly_totals_dict[week_key] += order.order_total
-#                 break
-#             week_start += timedelta(days=7)
-
-#     weeks = list(weekly_totals_dict.keys())
-#     weekly_totals = list(weekly_totals_dict.values())
-
-#     return weeks, weekly_totals
 
 
 

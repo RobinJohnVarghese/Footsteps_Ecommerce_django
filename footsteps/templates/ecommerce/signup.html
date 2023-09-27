@@ -29,11 +29,6 @@
         <form method="post"  onsubmit="return validateRegisterForm()" >
             {% csrf_token %}
 
-            {% comment %} <div class="form-group">
-                <label for="name">User Name:</label>
-                <input type="text" name="username" class="form-control" required>
-            </div> {% endcomment %}
-
             <div class="form-group">
                 <label for="name">First Name:</label>
                 <input type="text" name="first_name" id = 'first_name' pattern="[A-Z a-z]+" title="Please enter alphabetic characters only" class="form-control" required>
@@ -54,10 +49,6 @@
                 <input type="tel" name="mobile" id = 'mobile'  pattern="[0-9]+" title="Please enter numbers only" class="form-control" required maxlength="10">
             </div>
 
-            {% comment %} <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" name="password" id="password" class="form-control" required>
-            </div> {% endcomment %}
             <div class="form-group">
                 <label for="password">Password:</label>
                 <div class="input-group">

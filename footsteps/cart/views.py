@@ -21,7 +21,7 @@ def add_cart(request,product_id):
     if request.method == 'POST':
         product = Product.objects.get(id=product_id)
         size_id = request.POST.get('size_id')
-        quantity = 1#int(request.POST.get('quantity'))
+        quantity = 1
         if request.user.is_authenticated:
             total_items = CartItem.objects.filter(user=request.user).aggregate(total_quantity=Sum('quantity'))['total_quantity']
             if total_items is None:
@@ -60,7 +60,6 @@ def add_cart(request,product_id):
                                                              quantity=quantity,
                                                              user=request.user,
                                                              variations=variant)
-                        # variant.save()
                         cart_item.save()
                     else:
                         messages.info(request, 'Product Out of stock jjjj ')
@@ -100,7 +99,6 @@ def add_cart(request,product_id):
                         variant.stock -= quantity
                         cart_item.quantity += quantity
                         cart_item.save()
-                        # variant.save()
                     else:
                         messages.info(request, 'Product Out of stock ')
                         return redirect('product_details', product_id=product_id)
@@ -111,7 +109,6 @@ def add_cart(request,product_id):
                                                              quantity=quantity,
                                                              cart=cart,
                                                              variations=variant)
-                        # variant.save()
                         cart_item.save()
                     else:
                         messages.info(request, 'Product Out of stock  ')
@@ -140,37 +137,27 @@ def remove_cart(request, product_id, cart_item_id):
         if cart_item.quantity > 1:
             variant = cart_item.variations
             cart_item.quantity -= 1
-            # variant.stock += 1
             cart_item.save()
-            # variant.save()
             tax = 0
             grand_total = 0
             total = 0
             
             for cart_itm in cart_items:
                 total += (cart_itm.variations.price * cart_itm.quantity)
-                # quantity += cart_itm.quantity
             tax = (2 * total)/100
             grand_total = total + tax
-            
-            print("tax = ",tax, "grand_total = ", grand_total, "total = ", total)
-            
             return JsonResponse({
             'price':cart_item.variations.price,
             'total': total,
             'quantity': cart_item.quantity,
-            # 'cart_items': cart_item,
             'tax'       : tax,
             'grand_total': grand_total,
             })
         else: 
             variant = cart_item.variations
             variant.stock += 1
-            # variant.save()
             cart_item.delete()
             return JsonResponse({'removed':True})
-            
-            # return redirect('cart')
     except:
         pass
     return redirect('cart')
@@ -178,9 +165,6 @@ def remove_cart(request, product_id, cart_item_id):
 
 
 def inc_cart(request, product_id, cart_item_id):
-    print("+++++++++++++++++++++++++")
-    print("+++++++++++++++++++++++++")
-    print("+++++++++++++++++++++++++cart_item_id",cart_item_id)
     product = get_object_or_404(Product, id=product_id)
     try:
         if request.user.is_authenticated:
@@ -195,8 +179,6 @@ def inc_cart(request, product_id, cart_item_id):
             if cart_item.quantity >= 1:
                 cart_item.quantity += 1
                 cart_item.save()
-                # variant.stock -= 1
-                # variant.save()
         else:
             messages.warning(request, 'Out of Stock')
             return JsonResponse({'outofstock':True})
@@ -205,14 +187,10 @@ def inc_cart(request, product_id, cart_item_id):
     tax = 0
     grand_total = 0
     total = 0
-    print("***********", cart_items)
     for cart_itm in cart_items:
         total += (cart_itm.variations.price * cart_itm.quantity)
-        # quantity += cart_itm.quantity
     tax = (2 * total)/100
     grand_total = total + tax
-    
-    print("tax = ",tax, "grand_total = ", grand_total, "total = ", total)
     
     return JsonResponse({
         'price':cart_item.variations.price,
@@ -222,7 +200,6 @@ def inc_cart(request, product_id, cart_item_id):
         'tax'       : tax,
         'grand_total': grand_total,
         })
-    # return redirect('cart')
 
         
 
@@ -232,27 +209,8 @@ def remove_cart_item(request, product_id, cart_item_id):
         cart_item = CartItem.objects.get(product=product, user=request.user, id=cart_item_id)
     else:
         cart = Cart.objects.get(cart_id=_cart_id(request))
-        cart_item = CartItem.objects.get(product=product, cart=cart, id=cart_item_id)
-    # variant = cart_item.variations    
-    # variant.stock +=cart_item.quantity
-    # variant.save()   
+        cart_item = CartItem.objects.get(product=product, cart=cart, id=cart_item_id)  
     cart_item.delete()
-    # tax = 0
-    # grand_total = 0
-    # total = 0
-    # for cart_itm in cart_item:
-    #     total += (cart_itm.variations.price * cart_itm.quantity)
-    #     # quantity += cart_itm.quantity
-    # tax = (2 * total)/100
-    # grand_total = total + tax
-    # return JsonResponse({
-    #     'price':cart_item.variations.price,
-    #     'total': total,
-    #     'quantity': cart_item.quantity,
-    #     'cart_items': cart_item,
-    #     'tax'       : tax,
-    #     'grand_total': grand_total,
-    #     })
     return redirect('cart')
 
 
@@ -261,7 +219,6 @@ def cart(request, total=0, quantity=0, cart_items=None):
     try:
         tax = 0
         grand_total = 0
-       
         if request.user.is_authenticated:
             cart_items = CartItem.objects.filter(user=request.user, is_active=True)
         else:
@@ -297,7 +254,6 @@ def cart(request, total=0, quantity=0, cart_items=None):
 @login_required(login_url='signin')
 def checkout(request, total=0, quantity=0, cart_items=None):
     variants=SizeVariant.objects.filter()
-    
     try:
         tax = 0
         grand_total = 0
@@ -318,9 +274,13 @@ def checkout(request, total=0, quantity=0, cart_items=None):
     except ObjectDoesNotExist:
         pass #just ignore
     current_user = request.user
-    user = Userprofile.objects.get(user=current_user)
-    address = Profile.objects.filter(user=user)
-    ad = address.get(user=user,is_default=True)
+    user1 = Userprofile.objects.get(user=current_user)
+    address = Profile.objects.filter(user=user1)
+    try:
+        ad = address.get(user=user1,is_default=True)
+    except:
+        ad = None
+    
     context = {
         'total': total,
         'quantity': quantity,
@@ -328,7 +288,7 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         'tax'       : tax,
         'grand_total': grand_total,
         'address':address,
-        'user':user,
+        'user1':user1,
         'ad':ad,
     }
     return render(request, 'ecommerce/checkout.html', context)
@@ -359,15 +319,3 @@ def get_cart_count(request):
 
 
 
-# def apply_coupon(request):
-#     if request.method == 'POST':
-#         coupon_code = request.POST.get('coupon_code')
-
-#         try:
-#             coupon = Coupon.objects.get(coupon_code=coupon_code, is_expired=False)
-#             request.session['coupon_applied'] = coupon_code
-#             messages.success(request, 'Coupon applied successfully!')
-#         except Coupon.DoesNotExist:
-#             messages.error(request, 'Invalid coupon code or coupon has expired.')
-
-#     return redirect('cart')

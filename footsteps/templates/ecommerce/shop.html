@@ -73,19 +73,6 @@
                                 <button type="submit"  class="site-btn">Filter</button>
                             </form>
                         </div>
-                        {% comment %} <div>
-                            <h6 class="card-header">Price</h6>
-                            <div class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <input class="range-slid er"  type="range" value="{{minMaxPrice.price__min}}" max={{minMaxPrice.price__max}} min={{minMaxPrice.price__min}} id="rangeInput" oninput="maxPrice.value=this.value" />
-                                    <p>{{minMaxPrice.price__min}}-{{minMaxPrice.price__max}}</p>
-                                </li>
-                                <li class="list-group-item">
-                                    Max: <input type="number" value="{{minMaxPrice.price__min}}" max={{minMaxPrice.price__max}} min={{minMaxPrice.price__min}} class="form-control" id="maxPrice" onkeyup="rangeInput.value=this.value" id="maxPrice" />
-                                    <button id="priceFilterBtn" class="btn btn-info btn-sm mt-1">Filter</button>
-                                </li>
-                            </div>
-                        </div> {% endcomment %}
                     </div>
                 </div>
 
@@ -112,9 +99,7 @@
                                     {% else %}
                                     <div class="product__details__price">$ {{ product.price }} </span></div>
                                     {% endif %}
-                                    {% comment %} <div class="product__price">$ {{ product.price }}<span>$ {{ product.real_price}} </span></div>    {% endcomment %}
                                 </div>
-                                {% comment %} {{ product.price | add:3}} {% endcomment %}
                             </div>
                         </div>
 
@@ -152,115 +137,6 @@
     </section>
     <!-- Shop Section End -->
 
-    {% comment %} <script>
-        $(document).ready(function () {
-            $('#filter-form').submit(function (event) {
-                event.preventDefault(); // Prevent the default form submission
-        
-                const form = $(this);
-                const url = form.attr('action');
-                const formData = form.serialize();
-        
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    data: formData,
-                    dataType: 'html', // Expect HTML response
-                    success: function (data) {
-                        $('#filtered-results').html(data); // Update the results container
-                    },
-                    error: function (error) {
-                        console.log('Error:', error);
-                    },
-                });
-            });
-        });
-        </script> {% endcomment %}
-
-{% comment %} <script>
-            $(document).ready(function () {
-                $(document).on('click', '.minamount, .maxamount', function (event) {
-                    event.preventDefault();
-                    const url = $(this).attr('href');
-                    //const itemId1 = $(this).parent().find('input').attr('id');
-                    //console.log("itemId = "+itemId1)
-                    const itemId = $(this).parent().find('input').attr('id').split('-')[1];
-                    
-            
-                    updateQuantity(url, itemId);
-                });
-            
-                function updateQuantity(url, itemId) {
-                    $.ajax({
-                        url: url,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function (data) {
-                            if (data.error) {
-                                alert(data.error);
-                            } 
-                            //else if (data.removed) {
-                            //    alert('Product Removed From Cart');
-                            //    location.reload();
-                            //}
-                            else {
-                                // Update the input field with the corresponding item ID
-                                //const quantityInput = $('#item-' + itemId + '-quantity');
-                                //quantityInput.val(data.quantity);
-            
-                                // Update the total price
-                                const price = parseFloat(data.price);
-                                const quantity = parseInt(data.quantity);
-                                const quantity = parseInt(data.quantity);
-                                const total = price * quantity;
-                                const totalPriceElement = quantityInput.closest('tr').find('.cart__total');
-                                totalPriceElement.text('$' + total.toFixed(2));
-            
-                                // Update cart total, tax, and grand total
-                                //const cartTotalElement = $('#cart-total');
-                                //const taxElement = $('#tax');
-                                //const grandTotalElement = $('#grand-total');
-            
-                                cartTotalElement.text('$' + data.total.toFixed(2));
-                                taxElement.text('$' + data.tax.toFixed(2));
-                                grandTotalElement.text('$' + data.grand_total.toFixed(2));
-                            }
-                        },
-                        error: function (error) {
-                            console.log('Error:', error);
-                        },
-                    });
-                }
-            });
-            </script>  {% endcomment %}
-
-<!-- Load jQuery first -->
-{% comment %} <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-
-<!-- Then load jQuery UI -->
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> {% endcomment %}
-{% comment %} <script>
-$(document).ready(function () {
-    const priceRange = $('.price-range');
-    
-    if (priceRange.length > 0) {
-        // Initialize the price range slider only if the element exists
-        priceRange.slider({
-            range: true,
-            min: 10,
-            max: 99,
-            values: [minAmountInput.val(), maxAmountInput.val()],
-            slide: function (event, ui) {
-                minAmountInput.val('$' + ui.values[0]);
-                maxAmountInput.val('$' + ui.values[1]);
-            }
-        });
-    }
-
-    // Rest of your code
-});
-
-</script> {% endcomment %}
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {

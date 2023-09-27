@@ -242,9 +242,6 @@
 	{% include 'includes\dashboard_sidebar.html'%}
 	    <main class="col-md-9">
 		  <article class="card">
-		    {% comment %} <header class="card-header">
-			    <strong class="d-inline-block mr-3">Add Your Address </strong>
-		    </header> {% endcomment %}
 		    <div class="card-body">
 			    <div class="row">
 				    <div class = 'col-md-12'>
@@ -256,25 +253,13 @@
       <!--                      Crud operations Start                                             -->
       <!--                      Crud operations Start                                             -->
       <div class="container-fluid">
-        {% comment %} <div class="card" style = 'margin-top: 50px;'> {% endcomment %}
-          
-              {% comment %} <div class="container"> {% endcomment %}
                     <div class="table-wrapper">
                         <div class="table-title">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <h2><b>Coupons</b></h2>
-                                     {% comment %} <div id="searchResults">
-                                        <form method="GET" action="{% url 'admin_product_search' %}">
-                                        <input name="query" value="{{ query }}" type="text" id="searchInput" placeholder="Search...">
-                                        <button style="color:blue;" type="submit">Search</button>
-                                        </form>
-                                    </div> {% endcomment %}
                                 </div>
                                 <div class="col-sm-6">
-                                  {% comment %} <a style = "float:right;" href="#addEmployeeModal" class="btn btn-outline-info">  Add </a> {% endcomment %}
-                                    {% comment %} <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Coupon</span></a> {% endcomment %}
-                                    {% comment %} <a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>						 {% endcomment %}
                                 </div>
                             </div>
                         </div>
@@ -324,8 +309,7 @@
          <!--                      Crud operations end                                             -->
          <!--                      Crud operations end                                             -->
 
-{% comment %} 
-        </div> {% endcomment %}
+
     </div> <!-- row.// -->
 </div> <!-- card-body .// -->
 
@@ -338,7 +322,6 @@
 </section>
 
 
-{% comment %} <link rel="stylesheet" href="../static/css/styles.min.css" /> {% endcomment %}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
