@@ -180,7 +180,7 @@ def productmanagement(request):
     products = Product.objects.all()
     categories=Category.objects.all()
     context = {'products':products,'categories':categories}
-    return render(request,'adminside\productmanagement.html',context)
+    return render(request,'adminside/productmanagement.html',context)
 
 @login_required(login_url='adminside')
 def admin_product_search(request):
@@ -382,7 +382,7 @@ def sales_management(request):
         'sales':paged_products,
         'product_count':product_count
     }
-    return render(request,'adminside\sales_summary.html',context)
+    return render(request,'adminside/sales_summary.html',context)
 
 @login_required(login_url='adminside')
 def order_summary(request,order_id):
@@ -493,7 +493,7 @@ def offer_management(request):
         'offers':offers ,
         'categories':categories
     }
-    return render(request,'adminside\offers.html',context)
+    return render(request,'adminside/offers.html',context)
 
 @login_required(login_url='adminside')
 def addoffer(request):
@@ -605,7 +605,7 @@ def chart_management(request):
 
        
     }
-    return render(request,'adminside\chart.html',context)
+    return render(request,'adminside/chart.html',context)
 
 
 from collections import defaultdict
