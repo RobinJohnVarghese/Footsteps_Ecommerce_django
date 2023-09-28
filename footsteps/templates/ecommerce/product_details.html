@@ -80,7 +80,7 @@
                                 <li>
                                     <span>Available color:</span>
                                     <div class="item-option-select" >
-                                        <select name="color_id" id="color_id" class="form-control" onchange='loadSize()' required>
+                                        <select name="color_id" id="color_id" class="form-control"  required>
                                         <option value="" disabled selected>Select</option>
                                         {% for i in color %}
                                         <option value="{{ i.id}}">{{ i.color | capfirst }}</option>
@@ -205,7 +205,7 @@
     document.getElementById("color_id").addEventListener("change", function() {
         loadSize();
     });
-    
+
     function loadSize() {
         var sel = document.getElementById('color_id');
         //alert(sel.value);
