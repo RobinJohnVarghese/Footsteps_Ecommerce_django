@@ -80,7 +80,7 @@
                                 <li>
                                     <span>Available color:</span>
                                     <div class="item-option-select" >
-                                        <select name="color_id" id="colorid" class="form-control" onchange='sachin()'  required>
+                                        <select name="color_id" id="colorid" class="form-control" onchange='loadSize()'  required>
                                         <option value="" disabled selected>Select</option>
                                         {% for i in color %}
                                         <option value="{{ i.id}}">{{ i.color | capfirst }}</option>
@@ -201,98 +201,7 @@
     </div>
 </section>
 
-
 <script>
-
-    function sachin(){
-        
-        loadSize();
-    };
-{% comment %} 
-    document.getElementById("colorid").addEventListener("change", function() {
-        loadSize();
-    }); {% endcomment %}
-
-    function loadSize() {
-        
-        var colorId = document.getElementById('colorid').value;
-        var sizeSelect = document.querySelector('select[name="size_id"]');
-        var availabilityDiv = document.getElementById('availability');
-
-        // Check if a color is selected
-        if (colorId) {
-            
-            // Make an AJAX request to load sizes based on the selected color
-            var xhttp = new XMLHttpRequest();
-            
-            xhttp.onreadystatechange = function() {
-                if (this.readyState === 4 && this.status === 200) {
-                    sizeSelect.innerHTML = this.responseText;
-                    availabilityDiv.innerHTML = ''; // Clear availability when changing color
-                }
-                
-            };
-            
-            xhttp.open("GET", "../loadsize?colorid=" + colorId, true); // Update the URL to match your Django endpoint
-            xhttp.send();
-        } else {
-            
-            // If no color is selected, reset the size options and availability
-            sizeSelect.innerHTML = '<option value="" disabled selected>Select color First</option>';
-            availabilityDiv.innerHTML = '';
-        }
-    }
-
-    function loadAvailability() {
-        //alert('availablity')
-        var sizeId = document.querySelector('select[name="size_id"]').value;
-        var availabilityDiv = document.getElementById('availability');
-
-        // Check if a size is selected
-        if (sizeId) {
-            // Make an AJAX request to load availability based on the selected size
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState === 4 && this.status === 200) {
-                    availabilityDiv.innerHTML = this.responseText;
-                }
-            };
-
-            xhttp.open("GET", "../show_avalability?size_id=" + sizeId, true); // Update the URL to match your Django endpoint
-            xhttp.send();
-        } else {
-            // If no size is selected, clear the availability
-            availabilityDiv.innerHTML = '';
-        }
-    }
-
-
-    function loadPrice() {
-        var sel = document.getElementById('size_id');
-        //alert(sel.value);
-
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState === 4 && this.status === 200) {
-                // The responseText contains the HTML content from the Django view
-                document.getElementById("price").innerHTML = this.responseText;
-            }
-        };
-
-        xhttp.open("GET", "../../show_price?size_id="+sel.value, true);
-        xhttp.send();
-    }
-
-
-
-
-</script>
-
-
-{% comment %} <script>
-    document.getElementById("colorid").addEventListener("change", function() {
-        loadSize();
-    });
 
     function loadSize() {
         var sel = document.getElementById('colorid');
@@ -346,7 +255,7 @@ function loadAvailability() {
 
 
 
-</script> {% endcomment %}
+</script> 
 
 
 
