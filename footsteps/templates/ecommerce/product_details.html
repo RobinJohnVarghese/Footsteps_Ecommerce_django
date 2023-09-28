@@ -190,9 +190,11 @@
                     </div>
                     <div class="product__item__text">
                         <h6><a href="{%url 'product_details' product_id=product.id%}">{{ product.product_name }}</a></h6>
-
-                        
-                        <div class="product__price">$  {{ product.price }}<span>$  {{ product.price | add:3}}</span></div>
+                        {% if product.price != product.real_price %}
+                        <div class="product__details__price">$ {{ product.price }} <span>$ {{product.real_price }}</span></div>
+                        {% else %}
+                        <div class="product__details__price">$ {{ product.price }} </span></div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
