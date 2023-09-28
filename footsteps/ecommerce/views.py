@@ -202,7 +202,7 @@ def product_details(request,product_id):
         'color':color,
         'size':size,
     }
-    return render(request, 'ecommerce\product_details.html',context)
+    return render(request, 'ecommerce/product_details.html',context)
 
 
 
