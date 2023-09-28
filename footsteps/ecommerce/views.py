@@ -208,7 +208,7 @@ def product_details(request,product_id):
 
 
 def loadsize(request):
-    color_id = request.GET.get('color_id')
+    color_id = request.GET.get('colorid')
     color=ColorVariant.objects.get(id = color_id)
     sizelist=SizeVariant.objects.filter(Color_id = color)
     context={
