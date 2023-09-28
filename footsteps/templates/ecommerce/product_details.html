@@ -80,7 +80,7 @@
                                 <li>
                                     <span>Available color:</span>
                                     <div class="item-option-select" >
-                                        <select name="color_id" id="color_id" class="form-control"  required>
+                                        <select name="color_id" id="colorid" class="form-control"  required>
                                         <option value="" disabled selected>Select</option>
                                         {% for i in color %}
                                         <option value="{{ i.id}}">{{ i.color | capfirst }}</option>
@@ -202,12 +202,12 @@
 </section>
 
 <script>
-    document.getElementById("color_id").addEventListener("change", function() {
+    document.getElementById("colorid").addEventListener("change", function() {
         loadSize();
     });
 
     function loadSize() {
-        var sel = document.getElementById('color_id');
+        var sel = document.getElementById('colorid');
         //alert(sel.value);
 
         var xhttp = new XMLHttpRequest();
@@ -218,7 +218,7 @@
             }
         };
 
-        xhttp.open("GET", "../loadsize?color_id="+sel.value, true);
+        xhttp.open("GET", "../loadsize?colorid="+sel.value, true);
         xhttp.send();
     }
 
