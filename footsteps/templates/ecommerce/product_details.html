@@ -221,7 +221,7 @@
 
         // Check if a color is selected
         if (colorId) {
-            alert('ivda ethoi')
+            
             // Make an AJAX request to load sizes based on the selected color
             var xhttp = new XMLHttpRequest();
             
@@ -230,7 +230,7 @@
                     sizeSelect.innerHTML = this.responseText;
                     availabilityDiv.innerHTML = ''; // Clear availability when changing color
                 }
-                alert('ivda ethoi2')
+                
             };
             
             xhttp.open("GET", "/loadsize?colorid=" + colorId, true); // Update the URL to match your Django endpoint
