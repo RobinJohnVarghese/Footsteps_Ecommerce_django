@@ -233,7 +233,7 @@
                 
             };
             
-            xhttp.open("GET", "/loadsize?colorid=" + colorId, true); // Update the URL to match your Django endpoint
+            xhttp.open("GET", "../loadsize?colorid=" + colorId, true); // Update the URL to match your Django endpoint
             xhttp.send();
         } else {
             
@@ -258,13 +258,34 @@
                 }
             };
 
-            xhttp.open("GET", "/show_avalability?size_id=" + sizeId, true); // Update the URL to match your Django endpoint
+            xhttp.open("GET", "../show_avalability?size_id=" + sizeId, true); // Update the URL to match your Django endpoint
             xhttp.send();
         } else {
             // If no size is selected, clear the availability
             availabilityDiv.innerHTML = '';
         }
     }
+
+
+    function loadPrice() {
+        var sel = document.getElementById('size_id');
+        //alert(sel.value);
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                // The responseText contains the HTML content from the Django view
+                document.getElementById("price").innerHTML = this.responseText;
+            }
+        };
+
+        xhttp.open("GET", "../../show_price?size_id="+sel.value, true);
+        xhttp.send();
+    }
+
+
+
+
 </script>
 
 
