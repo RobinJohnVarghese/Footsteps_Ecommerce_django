@@ -80,7 +80,7 @@
                                 <li>
                                     <span>Available color:</span>
                                     <div class="item-option-select" >
-                                        <select name="color_id" id="colorid" class="form-control"  required>
+                                        <select name="color_id" id="colorid" class="form-control" onchange='sachin()'  required>
                                         <option value="" disabled selected>Select</option>
                                         {% for i in color %}
                                         <option value="{{ i.id}}">{{ i.color | capfirst }}</option>
@@ -203,6 +203,11 @@
 
 
 <script>
+
+    function sachin(){
+        alert('Sachineyyyyyyy');
+    };
+
     document.getElementById("colorid").addEventListener("change", function() {
         loadSize();
     });
