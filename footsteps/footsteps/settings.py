@@ -31,6 +31,7 @@ SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['www.robinjohnnvarghese.online','robinjohnnvarghese.online','13.49.235.129','172.31.20.228','127.0.0.1:8000']
 CSRF_TRUSTED_ORGINS =['http://13.49.235.129','0.0.0.0']
 
 
