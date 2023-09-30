@@ -21,6 +21,7 @@ def add_cart(request,product_id):
     if request.method == 'POST':
         product = Product.objects.get(id=product_id)
         size_id = request.POST.get('size_id')
+        color_id = request.POST.get('color_id')
         quantity = 1
         if request.user.is_authenticated:
             total_items = CartItem.objects.filter(user=request.user).aggregate(total_quantity=Sum('quantity'))['total_quantity']
@@ -29,9 +30,15 @@ def add_cart(request,product_id):
             if total_items > 10:
                 messages.warning(request, f'Cart Limit Reached You already have {total_items} in Your cart and you can add {10-total_items} items')
                 return redirect('product_details', product_id=product_id)
-            if size_id:
+            if size_id and color_id:
                 product = Product.objects.get(id=product_id)
                 variant = SizeVariant.objects.get(id=size_id)
+                color = ColorVariant.objects.get(id=color_id)
+                try:
+                    variant = SizeVariant.objects.get(size=size_id, Color_id=color)
+                except:
+                    messages.warning(request, "This Color does not have this Size, Please Select another.")
+                    return redirect('product_details', product_id)
                 try:
                     total_items = CartItem.objects.filter(user=request.user).aggregate(total_quantity=Sum('quantity'))[
                         'total_quantity']
@@ -62,7 +69,7 @@ def add_cart(request,product_id):
                                                              variations=variant)
                         cart_item.save()
                     else:
-                        messages.info(request, 'Product Out of stock jjjj ')
+                        messages.info(request, 'Product Out of stock')
                         return redirect('product_details', product_id=product_id)
                 return redirect('cart')
             else:

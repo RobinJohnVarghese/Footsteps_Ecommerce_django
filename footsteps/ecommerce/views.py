@@ -195,12 +195,17 @@ def product_details(request,product_id):
     products = Product.objects.all().filter(is_available=True)[:4]
     # variation_list =  Variation.objects.filter(product = product)
     color =  ColorVariant.objects.filter(product_id = product_id)
-    size =  SizeVariant.objects.filter(product_id = product_id,)
+    size3 =  SizeVariant.objects.filter(product_id = product_id,)
+    size_set = set()
+    for size in size3:
+        size_set.add(size.size)
+    size_list = list(size_set)  
+    size_list.sort()
     context = {
         'products': products,
         'product':product,
         'color':color,
-        'size':size,
+        'size':size_list,
     }
     return render(request, 'ecommerce/product_details.html',context)
 
