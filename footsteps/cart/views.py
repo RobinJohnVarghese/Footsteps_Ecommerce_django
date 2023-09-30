@@ -32,7 +32,7 @@ def add_cart(request,product_id):
                 return redirect('product_details', product_id=product_id)
             if size_id and color_id:
                 product = Product.objects.get(id=product_id)
-                variant = SizeVariant.objects.get(id=size_id)
+                
                 color = ColorVariant.objects.get(id=color_id)
                 try:
                     variant = SizeVariant.objects.get(size=size_id, Color_id=color)
