@@ -571,8 +571,8 @@ def graph_chart_management(request):
 
 
 def chart_management(request):
-    users_count = Profile.objects.count()
-    total_users_count =int(users_count - 1 )
+    users_count = Userprofile.objects.count()
+    total_users_count =int(users_count + 1 )
     product_count = Product.objects.count()
     order = Order.objects.filter(is_ordered=True).count()
     # for i in monthly_order_totals:
