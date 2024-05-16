@@ -95,6 +95,9 @@ DATABASES = {
 		'PASSWORD': config('PASSWORD'),
 		'HOST':'localhost',
  		'PORT':'5432',
+        'OPTIONS': {
+            'options': '-c search_path=your_schema,public'  # Add your schema before 'public'
+        }
     }
 }
 
