@@ -32,7 +32,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORGINS =['http://13.49.235.129','0.0.0.0']
+CSRF_TRUSTED_ORGINS =['http://13.126.168.65','0.0.0.0']
 
 
 # Application definition
