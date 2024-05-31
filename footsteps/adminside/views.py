@@ -136,31 +136,51 @@ def admin_category_search(request):
 
 @login_required(login_url='adminside')
 def addcategory(request):
-    if request.method =='POST':
-        category_name = request.POST.get('category_name')
+    if request.method == 'POST':
+        category_name = request.POST.get('category_name').strip().title()
+        
+        if not category_name:
+            error_message = 'Category name cannot be empty.'
+            categories = Category.objects.all()
+            return render(request, 'adminside/categorymanagement.html', {'error_message': error_message,'categories':categories})
+
         if Category.objects.filter(category_name=category_name).exists():
-            error_message = 'Categoryname already exists. Please choose a different Categoryname.'
-            return render(request, 'categorymanagement.html', {'error_message': error_message})
+            error_message = 'Category name already exists. Please choose a different category name.'
+            categories = Category.objects.all()
+            return render(request, 'adminside/categorymanagement.html', {'error_message': error_message,'categories':categories})
+           
         else:
-            category_name = request.POST.get('category_name')
-            slug = request.POST.get('category_name')
+            slug = category_name.replace(' ', '-')
             categories = Category(
-                category_name= category_name,
-                slug = slug,)
+                category_name=category_name,
+                slug=slug
+            )
             categories.save()
             return redirect('categorymanagement')
-    return render(request,'adminside\categorymanagement.html')
+    return render(request, 'adminside/categorymanagement.html')
 
-@login_required(login_url='adminside')     
-def updatecategory(request,id):
-    if request.method =='POST':
-        category_name = request.POST.get('category_name')
-        category = Category.objects.get(id=id)
-        category.category_name = category_name
-        category.slug=category_name
-        category.save()
-        return redirect('categorymanagement')
-    return render(request,'adminside\categorymanagement.html', ) 
+@login_required(login_url='adminside')
+def updatecategory(request, id):
+    category = Category.objects.get(id=id)
+    if request.method == 'POST':
+        new_category_name = request.POST.get('category_name').strip().title()
+
+        if not new_category_name:
+            error_message = 'Category name cannot be empty.'
+            categories = Category.objects.all()
+            return render(request, 'adminside/categorymanagement.html', {'error_message': error_message, 'category': category,'categories':categories})
+            
+        if Category.objects.filter(category_name=new_category_name).exclude(id=id).exists():
+            error_message = 'Category name already exists. Please choose a different category name.'
+            categories = Category.objects.all()
+            return render(request, 'adminside/categorymanagement.html', {'error_message': error_message, 'category': category,'categories':categories})
+            
+        else:
+            category.category_name = new_category_name
+            category.slug = new_category_name.replace(' ', '-')
+            category.save()
+            return redirect('categorymanagement')
+    return render(request, 'adminside/categorymanagement.html', {'category': category})
 
 @login_required(login_url='adminside')
 def deletecategory(request,id):
