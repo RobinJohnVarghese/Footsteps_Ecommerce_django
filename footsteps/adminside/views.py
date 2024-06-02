@@ -450,42 +450,125 @@ def coupon_management(request):
     }
     return render(request,'adminside/coupon_management.html',context)
 
-@login_required(login_url='adminside')
-def addcoupon(request):
-    if request.method =='POST':
-        coupon_code = request.POST.get('coupon_code')
-        if Coupon.objects.filter(coupon_code=coupon_code).exists():
-            error_message = 'Coupon name already exists. Please choose a different Coupon name.'
-            return render(request, 'coupon_management.html', {'error_message': error_message})
-        else:
-            coupon_code = request.POST.get('coupon_code')
-            expdate = request.POST.get('is_expired')
-            discount_price = request.POST.get('discount_price')
-            minimum_amount = request.POST.get('minimum_amount')
-            coupon = Coupon(coupon_code=coupon_code,
-                expdate= expdate,
-                discount_price= discount_price,
-                minimum_amount=minimum_amount,
-                )
-            coupon.save()
-            return redirect('coupon_management')
-    return render(request,'adminside/coupon_management.html')
+from datetime import date
+import re
 
 @login_required(login_url='adminside')
-def updatecoupon(request,id):
-    if request.method =='POST':
-        coupon_code = request.POST.get('coupon_code')
+def addcoupon(request):
+    if request.method == 'POST':
+        coupon_code = request.POST.get('coupon_code').strip().title()
         expdate = request.POST.get('is_expired')
         discount_price = request.POST.get('discount_price')
-        minimum_amount = request.POST.get('minimum_amount')             
-        coupon = Coupon.objects.get(id=id)
-        coupon.coupon_code= coupon_code
-        coupon.expdate= expdate
-        coupon.discount_price= discount_price
-        coupon.minimum_amount= minimum_amount
+        minimum_amount = request.POST.get('minimum_amount')
+        
+        error_message = None
+        
+        if not coupon_code:
+            error_message = 'coupon_code name cannot be empty.'
+            categories = Coupon.objects.all()
+            return render(request, 'adminside/coupon_management.html', {'error_message': error_message,'categories':categories})
+
+        # Check if coupon code already exists
+        if Coupon.objects.filter(coupon_code=coupon_code).exists():
+            error_message = 'Coupon name already exists. Please choose a different Coupon name.'
+            categories = Coupon.objects.all()
+            return render(request, 'adminside/coupon_management.html', {'error_message': error_message,'categories':categories})
+           
+        
+        # Coupon code validation
+        if not (5 <= len(coupon_code) <= 20):
+            error_message = 'Coupon name must be between 10 and 20 characters long.'
+        
+        # Discount price validation
+        try:
+            discount_price = int(discount_price)
+            if not (0 <= discount_price <= 20):
+                error_message = 'Discount price should be less than or equal to 20.'
+        except ValueError:
+            error_message = 'Invalid discount price.'
+
+        # Minimum amount validation
+        try:
+            minimum_amount = int(minimum_amount)
+            if not (30 <= minimum_amount <= 100):
+                error_message = 'Minimum amount should be between 30 and 100.'
+        except ValueError:
+            error_message = 'Invalid minimum amount.'
+
+        
+        if error_message:
+            categories = Coupon.objects.all()
+            return render(request, 'adminside/coupon_management.html', {'error_message': error_message,'categories':categories})
+        
+        # Save the coupon if all validations pass
+        coupon = Coupon(
+            coupon_code=coupon_code,
+            expdate=expdate,
+            discount_price=discount_price,
+            minimum_amount=minimum_amount,
+        )
+        coupon.save()
+        return redirect('coupon_management')
+    
+    return render(request, 'adminside/coupon_management.html')
+
+@login_required(login_url='adminside')
+def updatecoupon(request, id):
+    coupon = Coupon.objects.get(id=id)
+    if request.method == 'POST':
+        coupon_code = request.POST.get('coupon_code').strip().title()
+        expdate = request.POST.get('is_expired')
+        discount_price = request.POST.get('discount_price')
+        minimum_amount = request.POST.get('minimum_amount')
+        
+        error_message = None
+        
+        if not coupon_code:
+            error_message = 'coupon_code name cannot be empty.'
+            categories = Coupon.objects.all()
+            return render(request, 'adminside/coupon_management.html', {'error_message': error_message,'categories':categories})
+
+        # Check if coupon code already exists
+        if Coupon.objects.filter(coupon_code=coupon_code).exists():
+            error_message = 'Coupon name already exists. Please choose a different Coupon name.'
+            categories = Coupon.objects.all()
+            return render(request, 'adminside/coupon_management.html', {'error_message': error_message,'categories':categories})
+           
+        
+        # Coupon code validation
+        if not (5 <= len(coupon_code) <= 20):
+            error_message = 'Coupon name must be between 10 and 20 characters long.'
+        
+        # Discount price validation
+        try:
+            discount_price = int(discount_price)
+            if not (0 <= discount_price <= 20):
+                error_message = 'Discount price should be less than or equal to 20.'
+        except ValueError:
+            error_message = 'Invalid discount price.'
+
+        # Minimum amount validation
+        try:
+            minimum_amount = int(minimum_amount)
+            if not (30 <= minimum_amount <= 100):
+                error_message = 'Minimum amount should be between 30 and 100.'
+        except ValueError:
+            error_message = 'Invalid minimum amount.'
+
+        if error_message:
+            categories = Coupon.objects.all()
+            return render(request, 'adminside/coupon_management.html', {'error_message': error_message,'categories':categories})
+        
+        # Update the coupon if all validations pass
+        coupon.coupon_code = coupon_code
+        coupon.expdate = expdate
+        coupon.discount_price = discount_price
+        coupon.minimum_amount = minimum_amount
         coupon.save()  
         return redirect('coupon_management')
-    return render(request,'adminside\coupon_management.html')
+    
+    return render(request, 'adminside/coupon_management.html', {'coupon': coupon})
+
 
 @login_required(login_url='adminside')
 def deletecoupon(request,id):
