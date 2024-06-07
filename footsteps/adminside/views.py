@@ -297,48 +297,139 @@ def variants(request,product_id):
     }
     return render(request,'adminside/variants.html',context)
 
-@login_required(login_url='adminside')
-def addvariants(request,product_id):
-    if request.method =='POST':
-        product_id = request.POST.get('product_id')
-        color = request.POST.get('color')
-        size = request.POST.get('size')
-        stock = request.POST.get('stock')
-        price = request.POST.get('price')
-        product=Product.objects.get(id=product_id)
-        if ColorVariant.objects.filter(product_id=product,color=color).exists():
-            color_v =ColorVariant.objects.get(product_id=product,color=color)
-            size_v =SizeVariant(product_id=product,Color_id=color_v,size=size,stock=stock,price=price, real_price=price)
-            size_v.save()
-            return redirect('variants',product_id)
-        else:
-            color_v =ColorVariant(product_id=product,color=color)
-            color_v.save()
-            size_v =SizeVariant(product_id=product,Color_id=color_v,size=size,stock=stock,price=price, real_price=price)
-            size_v.save()
-            return redirect('variants',product_id)
-    product_id = request.GET.get('product_id')
-    return render(request,'adminside\variants.html')
+# @login_required(login_url='adminside')
+# def addvariants(request,product_id):
+#     if request.method =='POST':
+#         product_id = request.POST.get('product_id')
+#         color = request.POST.get('color')
+#         size = request.POST.get('size')
+#         stock = request.POST.get('stock')
+#         price = request.POST.get('price')
+#         product=Product.objects.get(id=product_id)
+#         if ColorVariant.objects.filter(product_id=product,color=color).exists():
+#             color_v =ColorVariant.objects.get(product_id=product,color=color)
+#             size_v =SizeVariant(product_id=product,Color_id=color_v,size=size,stock=stock,price=price, real_price=price)
+#             size_v.save()
+#             return redirect('variants',product_id)
+#         else:
+#             color_v =ColorVariant(product_id=product,color=color)
+#             color_v.save()
+#             size_v =SizeVariant(product_id=product,Color_id=color_v,size=size,stock=stock,price=price, real_price=price)
+#             size_v.save()
+#             return redirect('variants',product_id)
+#     product_id = request.GET.get('product_id')
+#     return render(request,'adminside\variants.html')
+
+# @login_required(login_url='adminside')
+# def updatevariants(request,id):
+#     if request.method =='POST':
+#         product_id = request.POST.get('product_id')
+#         new_color = request.POST.get('color')
+#         new_size = request.POST.get('size')
+#         stock = request.POST.get('stock')
+#         price = request.POST.get('price')                   
+#         size = SizeVariant.objects.get(id=id)
+#         color = size.Color_id
+#         color.color=new_color
+#         color.save()
+#         size.size=new_size
+#         size.price=price
+#         size.real_price=price
+#         size.stock = stock
+#         size.save()  
+#         return redirect('variants',product_id)
+#     return render(request,'adminside\variants.html')
 
 @login_required(login_url='adminside')
-def updatevariants(request,id):
-    if request.method =='POST':
+def addvariants(request, product_id):
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        color = request.POST.get('color')
+        size = int(request.POST.get('size'))
+        stock = int(request.POST.get('stock'))
+        price = float(request.POST.get('price'))
+        product = Product.objects.get(id=product_id)
+
+        # Validation
+        if not (5 <= size <= 12):
+            error_message= "Size must be between 5 and 12 inches."
+            product=Product.objects.get(id=product_id)
+            sizes=SizeVariant.objects.filter(product_id=product)
+            return render(request, 'adminside/variants.html',{'error_message': error_message,'sizes':sizes,'product':product})
+        elif not (1 <= stock <= 100):
+            error_message= "Stock must be between 1 and 100."
+            product=Product.objects.get(id=product_id)
+            sizes=SizeVariant.objects.filter(product_id=product)
+            return render(request, 'adminside/variants.html',{'error_message': error_message,'sizes':sizes,'product':product})
+        elif not (1 <= price <= 1000):
+            error_message= "Price must be between $1 and $1000."
+            product=Product.objects.get(id=product_id)
+            sizes=SizeVariant.objects.filter(product_id=product)
+            return render(request, 'adminside/variants.html',{'error_message': error_message,'sizes':sizes,'product':product})
+        else:
+            if ColorVariant.objects.filter(product_id=product, color=color).exists():
+                color_v = ColorVariant.objects.get(product_id=product, color=color)
+            else:
+                color_v = ColorVariant(product_id=product, color=color)
+                color_v.save()
+            size_v = SizeVariant(product_id=product, Color_id=color_v, size=size, stock=stock, price=price, real_price=price)
+            size_v.save()
+            return redirect('variants', product_id)
+
+    return render(request, 'adminside/variants.html')
+
+@login_required(login_url='adminside')
+def updatevariants(request, id):
+    if request.method == 'POST':
         product_id = request.POST.get('product_id')
         new_color = request.POST.get('color')
-        new_size = request.POST.get('size')
-        stock = request.POST.get('stock')
-        price = request.POST.get('price')                   
-        size = SizeVariant.objects.get(id=id)
-        color = size.Color_id
-        color.color=new_color
-        color.save()
-        size.size=new_size
-        size.price=price
-        size.real_price=price
-        size.stock = stock
-        size.save()  
-        return redirect('variants',product_id)
-    return render(request,'adminside\variants.html')
+        new_size = int(request.POST.get('size'))
+        stock = int(request.POST.get('stock'))
+        price = float(request.POST.get('price'))
+        size_variant = SizeVariant.objects.get(id=id)
+
+        # Validation
+        if not (5 <= new_size <= 12):
+            error_message = "Size must be between 5 and 12 inches."
+            product = Product.objects.get(id=product_id)
+            sizes = SizeVariant.objects.filter(product_id=product)
+            return render(request, 'adminside/variants.html', {
+                'error_message': error_message,
+                'sizes': sizes,
+                'product': product
+            })
+        elif not (1 <= stock <= 100):
+            error_message = "Stock must be between 1 and 100."
+            product = Product.objects.get(id=product_id)
+            sizes = SizeVariant.objects.filter(product_id=product)
+            return render(request, 'adminside/variants.html', {
+                'error_message': error_message,
+                'sizes': sizes,
+                'product': product
+            })
+        elif not (1 <= price <= 1000):
+            error_message = "Price must be between $1 and $1000."
+            product = Product.objects.get(id=product_id)
+            sizes = SizeVariant.objects.filter(product_id=product)
+            return render(request, 'adminside/variants.html', {
+                'error_message': error_message,
+                'sizes': sizes,
+                'product': product
+            })
+        else:
+            color_variant = size_variant.Color_id
+            color_variant.color = new_color
+            color_variant.save()
+            size_variant.size = new_size
+            size_variant.price = price
+            size_variant.real_price = price
+            size_variant.stock = stock
+            size_variant.save()
+            return redirect('variants', product_id)
+
+    return render(request, 'adminside/variants.html')
+
+
 
 @login_required(login_url='adminside')
 def deletevariants(request,id):

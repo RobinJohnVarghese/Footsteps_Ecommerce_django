@@ -29,7 +29,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG')
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORGINS =['http://13.126.168.65','0.0.0.0']
