@@ -477,7 +477,7 @@ def addcoupon(request):
         
         # Coupon code validation
         if not (5 <= len(coupon_code) <= 20):
-            error_message = 'Coupon name must be between 10 and 20 characters long.'
+            error_message = 'Coupon name must be between 5 and 20 characters long.'
         
         # Discount price validation
         try:
@@ -537,7 +537,7 @@ def updatecoupon(request, id):
         
         # Coupon code validation
         if not (5 <= len(coupon_code) <= 20):
-            error_message = 'Coupon name must be between 10 and 20 characters long.'
+            error_message = 'Coupon name must be between 5 and 20 characters long.'
         
         # Discount price validation
         try:

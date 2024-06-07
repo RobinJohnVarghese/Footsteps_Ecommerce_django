@@ -89,12 +89,14 @@ WSGI_APPLICATION = 'footsteps.wsgi.application'
 #DATABASE_URL = config('DATABASE_URL')
 DATABASES = {
     'default': {
-        'ENGINE':'django.db.backends.postgresql_psycopg2',
+        # 'ENGINE':'django.db.backends.postgresql_psycopg2',
+        'ENGINE': config('ENGINE'),
         'NAME':config('NAME'),
         'USER':config('USER'), 
 		'PASSWORD': config('PASSWORD'),
 		'HOST':'localhost',
- 		'PORT':'5432',
+ 		# 'PORT':'5432',
+        'PORT': config('PORT'),
         
     }
 }
