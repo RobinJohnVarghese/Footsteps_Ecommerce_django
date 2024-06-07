@@ -210,6 +210,20 @@ def product_details(request,product_id):
     return render(request, 'ecommerce/product_details.html',context)
 
 
+# def get_variant_price(request):
+#     product_id = request.GET.get('product_id')
+#     color_id = request.GET.get('color_id')
+#     size_id = request.GET.get('size_id')
+    
+#     # Fetch the variant price based on color and size
+#     try:
+#         variant = ColorVariant.objects.get(product_id=product_id, color_id=color_id, size_id=size_id)
+#         price = variant.price
+#         return JsonResponse({'price': price})
+#     except ColorVariant.DoesNotExist:
+#         return JsonResponse({'error': 'Variant not found'}, status=404)
+
+
 
 
 def loadsize(request):

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from . import views
-from .views import otp_verification_view
+from .views import *
 
 
 ############################
@@ -36,6 +36,7 @@ urlpatterns = [
     path('shop', views.shop,name="shop"),
     path('shop/<slug:category_slug>/', views.shop, name='products_by_category'),
     path('product_details/<product_id>', views.product_details,name="product_details"),
+    # path('get_variant_price/', get_variant_price, name='get_variant_price'),
     path('loadsize', views.loadsize,name="loadsize"),
     path('show_avalibality', views.show_avalibality,name="show_avalibality"),
 

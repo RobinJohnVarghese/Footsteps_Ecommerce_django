@@ -80,17 +80,14 @@
                                 <li>
                                     <span>Available color:</span>
                                     <div class="item-option-select" >
-                                        {% comment %} <select name="color_id" id="colorid" class="form-control" onchange='loadSize()'  required> {% endcomment %}
+                                        
                                     <select name="color_id" id="color_id" class="form-control"   required>
                                         <option value="" disabled selected>Select</option>
                                         {% for i in color %}
                                         <option value="{{ i.id}}">{{ i.color | capfirst }}</option>
                                         {% endfor %}
                                     </select>
-                                    {% comment %} <select name="size_id" id="size_id" class="form-control">
-                                        <option value="" disabled selected>Select color First</option>
-                                        
-                                    </select> {% endcomment %}
+                                    
                                     </div>
                                 </li>
                                 <li>
@@ -114,7 +111,7 @@
 
 
                     </form>
-
+                    
 
                 </div>
             </div>
@@ -210,6 +207,7 @@
     </div>
 </section>
 
+
 <script>
 
     function loadSize() {
@@ -264,7 +262,7 @@ function loadAvailability() {
 
 
 
-</script> 
+</script>  
 
 
 
