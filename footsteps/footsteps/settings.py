@@ -27,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
+DEBUG = False
 
-DEBUG = config('DEBUG')
+# DEBUG = config('DEBUG')
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORGINS =['http://13.126.168.65','0.0.0.0']
@@ -38,6 +38,7 @@ CSRF_TRUSTED_ORGINS =['http://13.126.168.65','0.0.0.0']
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'ecommerce',
     'adminside',
     'cart',
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
