@@ -108,7 +108,7 @@ def signup(request):
             messages.warning(request,"Email is already Exist Please try another Mail")
             return redirect('signup')
         if referral_code:
-            try:
+            try: 
                 referrer = Userprofile.objects.get(referral_id=referral_code)
                 # Credit the new user's wallet
                 user = User.objects.create_user(username=email,password=password,first_name=first_name,last_name=last_name)
